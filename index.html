@@ -1401,9 +1401,11 @@ var FRAMEWORKS = {"gri":{"nome":"GRI","descricao":"Global Reporting Initiative �
         var qtd = 0;
         Object.keys(col.selecionados).forEach(function(fw){ qtd += Object.keys(col.selecionados[fw]).length; });
         qtd += col.customizados.length;
+        var desdobra = Math.max(0, col.hierarquia.length - 1);
         b.innerHTML = '<span class="num-coleta">' + (i + 1) + '</span>' +
                       '<span class="txt-coleta"><span class="nome-c">' + esc(col.nome) + '</span>' +
-                      '<span class="info-c">' + qtd + ' indicador(es) · ' + col.hierarquia.length + ' nível(is)</span></span>';
+                      '<span class="info-c">' + rotuloPeriodo(col.periodicidade) + ' · ' + qtd + ' indicador(es)' +
+                      (desdobra ? ' · ' + desdobra + ' desdobramento(s)' : '') + '</span></span>';
         b.addEventListener('click', function(){
           estado.coletaAtiva = i;
           redesenharEtapaAtual();
@@ -3558,10 +3560,6 @@ var FRAMEWORKS = {"gri":{"nome":"GRI","descricao":"Global Reporting Initiative �
     var pai = paiId ? noPorId(paiId) : C().hierarquia[0];
     var nivel = pai ? pai.nivel + 1 : 2;
     if (nivel > 4) return;
-    if (C().hierarquia.length >= contrato.qtdColetas){
-      avisoRapido('O contrato prevê ' + contrato.qtdColetas + ' coleta(s). Para mais, é preciso aditivo.', true);
-      return;
-    }
     C().hierarquia.push({
       id:'n' + (++seqNo),
       nome: 'Nova coleta ' + ['filha','neta','bisneta'][nivel - 2],
@@ -3631,8 +3629,17 @@ var FRAMEWORKS = {"gri":{"nome":"GRI","descricao":"Global Reporting Initiative �
     alvo.innerHTML = '';
 
     var aviso = el('aviso-hierarquia');
-    var cota = C().hierarquia.length + ' de ' + contrato.qtdColetas + ' coleta(s) contratada(s) em uso';
-    aviso.innerHTML = '<div class="aviso neutro"><b>' + cota + '.</b> A distribuição dos indicadores entre estas coletas é feita no passo seguinte, na configuração de cada indicador.</div>';
+    var niveis = {1:0, 2:0, 3:0, 4:0};
+    C().hierarquia.forEach(function(n){ niveis[n.nivel]++; });
+    var partes = [];
+    if (niveis[2]) partes.push(niveis[2] + ' filha(s)');
+    if (niveis[3]) partes.push(niveis[3] + ' neta(s)');
+    if (niveis[4]) partes.push(niveis[4] + ' bisneta(s)');
+    aviso.innerHTML = '<div class="aviso neutro"><b>Coleta ' + (estado.coletaAtiva + 1) + ' de ' +
+      contrato.qtdColetas + ' contratada(s).</b> ' +
+      (partes.length ? 'Esta coleta tem ' + partes.join(', ') + ' — desdobramentos internos são livres e não consomem coletas do contrato. '
+                     : 'Filhas, netas e bisnetas são desdobramentos internos e não consomem coletas do contrato. ') +
+      'A distribuição dos indicadores é feita no passo seguinte, na configuração de cada indicador.</div>';
 
     function desenharNo(no){
       var div = document.createElement('div');
@@ -4052,12 +4059,12 @@ var FRAMEWORKS = {"gri":{"nome":"GRI","descricao":"Global Reporting Initiative �
 
     html += '<h2 class="subtitulo">Coletas configuradas</h2>';
     html += '<table class="resumo"><thead><tr><th>Coleta</th><th style="width:130px">Indicadores</th>' +
-            '<th style="width:120px">Níveis</th><th style="width:150px">Sem responsável</th></tr></thead><tbody>';
+            '<th style="width:150px">Desdobramentos</th><th style="width:150px">Sem responsável</th></tr></thead><tbody>';
     var guardaAtiva = estado.coletaAtiva;
     estado.coletas.forEach(function(col, i){
       estado.coletaAtiva = i;
       html += '<tr><td><b>' + esc(col.nome) + '</b></td><td>' + totalSelecionados() + '</td>' +
-              '<td>' + col.hierarquia.length + '</td>' +
+              '<td>' + Math.max(0, col.hierarquia.length - 1) + ' (filhas, netas, bisnetas)</td>' +
               '<td>' + (contarSemResponsavel() ? '<span class="pill alerta">' + contarSemResponsavel() + '</span>' : '—') + '</td></tr>';
     });
     estado.coletaAtiva = guardaAtiva;
