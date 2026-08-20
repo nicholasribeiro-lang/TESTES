@@ -299,7 +299,25 @@
     border-radius:6px;box-shadow:0 8px 28px rgba(31,42,68,.18);padding:10px;display:none;width:212px;
   }
   body.editor .barra-editor{display:block}
-  .barra-editor h4{margin:0 0 8px;font-size:10px;letter-spacing:.5px;color:var(--cinza)}
+  .topo-editor{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px;
+    padding-bottom:8px;border-bottom:1px solid var(--linha-suave)}
+  .barra-editor h4{margin:0;font-size:10px;letter-spacing:.5px;color:var(--cinza)}
+  .botoes-topo{display:flex;gap:4px}
+  .botoes-topo button{
+    width:24px;height:24px;border:1px solid var(--linha);background:#fff;border-radius:4px;
+    color:#4A5568;font-size:15px;line-height:1;cursor:pointer;padding:0;
+  }
+  .botoes-topo button:hover{border-color:var(--azul);color:var(--azul)}
+  #ed-fechar:hover{border-color:var(--vermelho-texto);color:var(--vermelho-texto);background:#FDF2F4}
+  .barra-editor.recolhida{width:auto}
+  .barra-editor.recolhida .topo-editor{margin-bottom:0;padding-bottom:0;border-bottom:none}
+  .barra-editor.recolhida .ferramentas,
+  .barra-editor.recolhida .cores,
+  .barra-editor.recolhida .campo-autor,
+  .barra-editor.recolhida .editor-acoes,
+  .barra-editor.recolhida .contador-notas,
+  .barra-editor.recolhida .dica-editor,
+  .barra-editor.recolhida .estado-salvo{display:none}
   .ferramentas{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:10px}
   .ferramentas button{padding:8px 0;border:1px solid var(--linha);background:#fff;border-radius:4px;cursor:pointer;font-size:14px}
   .ferramentas button.ativa{background:var(--azul);border-color:var(--azul);color:#fff}
@@ -317,6 +335,14 @@
   .editor-acoes button:hover{border-color:var(--azul);color:var(--azul)}
   .contador-notas{font-size:11px;color:var(--cinza);margin:8px 0 0;text-align:center}
   .dica-editor{font-size:10px;color:var(--cinza-claro);line-height:1.4;margin:6px 0 0;text-align:center}
+  .estado-salvo{font-size:10px;color:var(--verde);margin:4px 0 0;text-align:center;min-height:12px}
+  .aviso-recuperado{
+    position:fixed;left:50%;bottom:20px;transform:translateX(-50%);z-index:70;background:#fff;
+    border:1px solid var(--laranja);border-radius:6px;box-shadow:0 8px 24px rgba(31,42,68,.18);
+    padding:12px 16px;font-size:13px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;max-width:92vw;
+  }
+  .aviso-recuperado button{border:1px solid var(--azul-escuro);background:var(--azul-escuro);color:#fff;border-radius:4px;padding:6px 12px;font-size:12px;cursor:pointer}
+  .aviso-recuperado button.fraco{background:#fff;color:#4A5568;border-color:var(--linha)}
   .nota-editor{
     position:absolute;z-index:55;max-width:230px;background:#FFF8E1;border:1px solid var(--laranja);
     border-radius:6px;padding:8px 10px;font-size:12px;line-height:1.45;box-shadow:0 4px 14px rgba(31,42,68,.16);
@@ -348,7 +374,13 @@
 <div id="camada-editor"><canvas id="tela-editor"></canvas><div id="notas-editor"></div></div>
 
 <div class="barra-editor">
-  <h4>MODO EDITOR</h4>
+  <div class="topo-editor">
+    <h4>MODO EDITOR</h4>
+    <div class="botoes-topo">
+      <button id="ed-recolher" title="Recolher a barra">&minus;</button>
+      <button id="ed-fechar" title="Fechar o modo editor (Esc)">&times;</button>
+    </div>
+  </div>
   <div class="ferramentas">
     <button data-f="cursor" title="Usar a tela normalmente">&#9995;</button>
     <button data-f="caneta" class="ativa" title="Desenho livre">&#9998;</button>
@@ -374,9 +406,9 @@
     <button id="ed-desfazer">Desfazer último traço</button>
     <button id="ed-limpar">Limpar tudo</button>
     <button id="ed-exportar">Exportar resumo (.md)</button>
-    <button id="ed-sair">Sair do modo editor</button>
   </div>
   <p class="contador-notas" id="ed-contador"></p>
+  <p class="estado-salvo" id="ed-salvo"></p>
   <p class="dica-editor">Circule um campo e depois crie o comentário: ele recebe o mesmo número.</p>
 </div>
 
@@ -2405,7 +2437,7 @@ var FRAMEWORKS = {"gri":{"nome":"GRI","descricao":"Global Reporting Initiative �
     if (i === -1){ return false; }
     var removido = tracos.splice(i, 1)[0];
     if (removido.tipo === 'retangulo' && removido.num === ultimaMarca) ultimaMarca = null;
-    redesenhar(); atualizarContador();
+    redesenhar(); atualizarContador(); guardarLocal();
     return true;
   }
 
@@ -2414,7 +2446,7 @@ var FRAMEWORKS = {"gri":{"nome":"GRI","descricao":"Global Reporting Initiative �
     if (i === -1) return;
     tracos.splice(i, 1);
     if (t.tipo === 'retangulo' && t.num === ultimaMarca) ultimaMarca = null;
-    redesenhar(); atualizarContador();
+    redesenhar(); atualizarContador(); guardarLocal();
   }
 
   function aplicarFerramenta(){
@@ -2433,6 +2465,7 @@ var FRAMEWORKS = {"gri":{"nome":"GRI","descricao":"Global Reporting Initiative �
     listaNotas.push(n);
     renderNota(n);
     atualizarContador();
+    guardarLocal();
   }
 
   function renderNota(n, semFoco){
@@ -2448,11 +2481,11 @@ var FRAMEWORKS = {"gri":{"nome":"GRI","descricao":"Global Reporting Initiative �
 
     var ta = div.querySelector('textarea');
     ta.value = n.texto;
-    ta.addEventListener('input', function(){ n.texto = ta.value; });
+    ta.addEventListener('input', function(){ n.texto = ta.value; guardarLocal(); });
 
     div.querySelector('.fechar').addEventListener('click', function(){
       listaNotas = listaNotas.filter(function(x){ return x !== n; });
-      div.remove(); atualizarContador();
+      div.remove(); atualizarContador(); guardarLocal();
     });
 
     /* arrastar pelo número, e clique simples troca o número */
@@ -2483,11 +2516,12 @@ var FRAMEWORKS = {"gri":{"nome":"GRI","descricao":"Global Reporting Initiative �
     badge.addEventListener('pointerup', function(ev){
       arrastando = false;
       badge.releasePointerCapture(ev.pointerId);
+      guardarLocal();
       if (moveu) return;
       var v = prompt('Número deste comentário:', n.num);
       if (v === null) return;
       var num = parseInt(v, 10);
-      if (!isNaN(num)){ n.num = num; badge.textContent = num; proximoNum = Math.max(proximoNum, num + 1); }
+      if (!isNaN(num)){ n.num = num; badge.textContent = num; proximoNum = Math.max(proximoNum, num + 1); guardarLocal(); }
     });
 
     notas.appendChild(div);
@@ -2532,7 +2566,7 @@ var FRAMEWORKS = {"gri":{"nome":"GRI","descricao":"Global Reporting Initiative �
   ['pointerup','pointercancel'].forEach(function(evt){
     tela.addEventListener(evt, function(){
       if (!desenhando) return;
-      desenhando = false; atual = null; redesenhar(); atualizarContador();
+      desenhando = false; atual = null; redesenhar(); atualizarContador(); guardarLocal();
     });
   });
 
@@ -2556,7 +2590,7 @@ var FRAMEWORKS = {"gri":{"nome":"GRI","descricao":"Global Reporting Initiative �
     if (!tracos.length && !listaNotas.length) return;
     if (!confirm('Apagar todas as marcações e comentários desta sessão?')) return;
     tracos = []; listaNotas = []; notas.innerHTML = ''; proximoNum = 1; ultimaMarca = null;
-    redesenhar(); atualizarContador();
+    redesenhar(); atualizarContador(); guardarLocal();
   });
 
   document.getElementById('ed-exportar').addEventListener('click', function(){
@@ -2583,6 +2617,55 @@ var FRAMEWORKS = {"gri":{"nome":"GRI","descricao":"Global Reporting Initiative �
     document.body.appendChild(a); a.click(); document.body.removeChild(a);
     setTimeout(function(){ URL.revokeObjectURL(url); }, 1000);
   });
+
+  /* ----- salvamento automático neste navegador ----- */
+  var CHAVE_LOCAL = 'anotacoes-central-esg-v1';
+  var temporizador = null;
+
+  function guardarLocal(){
+    clearTimeout(temporizador);
+    temporizador = setTimeout(function(){
+      try {
+        if (!tracos.length && !listaNotas.length){
+          window.localStorage.removeItem(CHAVE_LOCAL);
+          marcarSalvo('');
+          return;
+        }
+        window.localStorage.setItem(CHAVE_LOCAL, JSON.stringify({
+          versao: 1, autor: document.getElementById('ed-autor').value,
+          salvoEm: new Date().toISOString(),
+          proximoNum: proximoNum, tracos: tracos, notas: listaNotas
+        }));
+        marcarSalvo('salvo neste navegador · ' + new Date().toLocaleTimeString('pt-BR').slice(0,5));
+      } catch (e) {
+        marcarSalvo('salvamento automático indisponível — use "Salvar anotações"');
+      }
+    }, 400);
+  }
+
+  function marcarSalvo(txt){
+    var alvo = document.getElementById('ed-salvo');
+    if (alvo) alvo.textContent = txt;
+  }
+
+  function restaurarLocal(){
+    var bruto;
+    try { bruto = window.localStorage.getItem(CHAVE_LOCAL); } catch (e) { return false; }
+    if (!bruto) return false;
+    var pacote;
+    try { pacote = JSON.parse(bruto); } catch (e) { return false; }
+    if (!pacote || (!pacote.tracos && !pacote.notas)) return false;
+
+    tracos = pacote.tracos || [];
+    listaNotas = pacote.notas || [];
+    proximoNum = pacote.proximoNum || 1;
+    notas.innerHTML = '';
+    listaNotas.forEach(function(n){ renderNota(n, true); });
+    if (pacote.autor) document.getElementById('ed-autor').value = pacote.autor;
+    redesenhar(); atualizarContador();
+    marcarSalvo('recuperado de ' + new Date(pacote.salvoEm).toLocaleString('pt-BR'));
+    return true;
+  }
 
   /* ----- ida e volta das anotações ----- */
   function autorAtual(){
@@ -2655,7 +2738,7 @@ var FRAMEWORKS = {"gri":{"nome":"GRI","descricao":"Global Reporting Initiative �
       listaNotas.forEach(function(n){ proximoNum = Math.max(proximoNum, n.num + 1); });
       ultimaMarca = null;
 
-      redesenhar(); atualizarContador();
+      redesenhar(); atualizarContador(); guardarLocal();
       avisoEditor('Anotações de ' + (pacote.autor || 'outro revisor') + ' carregadas' +
                   (deslocamento ? ' e renumeradas a partir de ' + (deslocamento + 1) : '') + '.');
     };
@@ -2689,11 +2772,34 @@ var FRAMEWORKS = {"gri":{"nome":"GRI","descricao":"Global Reporting Initiative �
   });
 
   document.getElementById('btn-editor').addEventListener('click', function(){ alternar(); });
-  document.getElementById('ed-sair').addEventListener('click', function(){ alternar(false); });
+  document.getElementById('ed-fechar').addEventListener('click', function(){ alternar(false); });
+  document.getElementById('ed-recolher').addEventListener('click', function(){
+    var barra = document.querySelector('.barra-editor');
+    var recolhida = barra.classList.toggle('recolhida');
+    document.getElementById('ed-recolher').innerHTML = recolhida ? '&plus;' : '&minus;';
+    document.getElementById('ed-recolher').title = recolhida ? 'Expandir a barra' : 'Recolher a barra';
+  });
   document.addEventListener('keydown', function(e){
     if (e.key === 'Escape' && ligado) alternar(false);
     if (e.key.toLowerCase() === 'e' && (e.ctrlKey || e.metaKey) && e.shiftKey){ e.preventDefault(); alternar(); }
   });
+
+  // recupera anotações desta máquina assim que a página abre
+  var recuperou = restaurarLocal();
+  if (recuperou){
+    var aviso = document.createElement('div');
+    aviso.className = 'aviso-recuperado';
+    aviso.innerHTML = 'Há anotações não finalizadas salvas neste navegador. ' +
+      '<button id="ver-anotacoes">Abrir modo editor</button>' +
+      '<button id="ignorar-anotacoes" class="fraco">Dispensar</button>';
+    document.body.appendChild(aviso);
+    document.getElementById('ver-anotacoes').addEventListener('click', function(){
+      alternar(true); aviso.remove();
+    });
+    document.getElementById('ignorar-anotacoes').addEventListener('click', function(){ aviso.remove(); });
+  }
+
+  document.getElementById('ed-autor').addEventListener('input', guardarLocal);
 
   window.addEventListener('resize', function(){ if (ligado) dimensionar(); });
   var observador = new MutationObserver(function(){ if (ligado) dimensionar(); });
