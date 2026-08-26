@@ -45,6 +45,28 @@
   #navegacao{display:none}
   body.tela-form #navegacao{display:flex}
 
+  /* ===== parâmetros de coleta ===== */
+  .bloco-param{border:1px solid var(--linha);border-radius:8px;margin-bottom:16px;overflow:hidden;background:#fff}
+  .bloco-param.faltando{border-color:#F3C3CB}
+  .cab-param{display:flex;align-items:flex-start;gap:20px;padding:18px 20px;background:#FBFCFE;border-bottom:1px solid var(--linha)}
+  .cab-param > div{flex:1}
+  .nome-param{font-size:13px;font-weight:700;letter-spacing:.4px}
+  .obg-param{font-size:9px;font-weight:700;background:#FDF2F4;color:var(--vermelho-texto);padding:3px 8px;border-radius:8px;letter-spacing:.3px;margin-left:6px}
+  .desc-param{margin:7px 0 10px;font-size:12px;color:var(--cinza);line-height:1.55;max-width:760px}
+  .usos-param{font-size:11px;color:var(--cinza-claro)}
+  .corpo-param{display:grid;grid-template-columns:340px 1fr;gap:24px;padding:18px 20px}
+  @media (max-width:900px){.corpo-param{grid-template-columns:1fr}}
+  .rot-mini{display:block;font-size:10px;font-weight:700;letter-spacing:.5px;color:var(--cinza);margin-bottom:10px}
+  .linha-valor{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+  .ordem-valor{width:20px;font-size:11px;font-weight:700;color:var(--cinza-claro);text-align:right;flex:none}
+  .linha-valor input{flex:1;padding:9px 11px;border:1px solid #D8E0EA;border-radius:4px;font-size:13px}
+  .linha-valor input:focus{outline:2px solid var(--azul);border-color:var(--azul)}
+  .vazio-param{font-size:12px;color:var(--cinza-claro);display:block;margin-bottom:10px}
+  .previa-tabela .tabela-limpa{font-size:12px}
+  .previa-tabela th{font-size:10px}
+  .vazio-cel{color:#CBD5E1}
+  .previa-vazia{font-size:12px;color:var(--cinza-claro);border:1px dashed var(--linha);border-radius:6px;padding:20px;text-align:center}
+
   /* ===== preenchimento no layout do sistema ===== */
   .layout-preench{display:grid;grid-template-columns:290px 1fr;min-height:calc(100vh - 78px)}
   .lateral-ind{background:#fff;border-right:1px solid var(--linha);padding:16px 0;overflow-y:auto;max-height:calc(100vh - 78px)}
@@ -1383,6 +1405,18 @@
     </div>
   </section>
 
+  <!-- PARÂMETROS DE COLETA -->
+  <section class="etapa oculto" data-etapa="parametros">
+    <div class="cartao">
+      <h2>Parâmetros de coleta</h2>
+      <p class="ajuda">Informações usadas para customizar os formulários de acordo com as características da sua empresa.
+        As listas abaixo viram as <b>linhas das tabelas</b> dos indicadores — o que você escrever aqui é o que o respondente
+        vai ver no formulário.</p>
+      <div class="faixa-contrato" id="resumo-parametros"></div>
+      <div id="lista-parametros"></div>
+    </div>
+  </section>
+
   <!-- HIERARQUIA -->
   <section class="etapa oculto" data-etapa="hierarquia">
     <div class="cartao">
@@ -1624,6 +1658,7 @@ var FRAMEWORKS = {"gri":{"nome":"GRI","descricao":"Global Reporting Initiative �
   var ETAPAS = [
     {id:'ident',         nome:'Identificação', sempre:true},
     {id:'frameworks',    nome:'Questionários', sempre:true},
+    {id:'parametros',    nome:'Parâmetros',    quando:function(){ return estado.frameworks.length > 0; }},
     {id:'hierarquia',    nome:'Hierarquia',    quando:function(){ return estado.temHierarquia; }},
     {id:'indicadores',   nome:'Indicadores',   quando:function(){ return estado.frameworks.length > 0; }},
     {id:'notificacoes',  nome:'Notificações',  sempre:true},
@@ -1639,9 +1674,54 @@ var FRAMEWORKS = {"gri":{"nome":"GRI","descricao":"Global Reporting Initiative �
     frameworks:[],
     temCustomizados:false,
     equipe:[],
+    parametros:{},
     coletas:[],
     coletaAtiva:0
   };
+
+  // listas que viram as linhas das tabelas dos indicadores
+  var PARAMETROS = [
+    {id:'regiao', nome:'DISTRIBUIÇÃO REGIONAL', obrigatorio:true,
+     desc:'Discriminação da operação da empresa, considerando sede e filiais, que podem ser por regiões (norte, nordeste, centro-oeste) ou até mesmo países (Brasil, Argentina) como serão reportados no relatório.',
+     exemplo:['Locais','Brasil','Regionais','Exterior'],
+     usadoEm:['GRI 2-7','GRI 2-8','GRI 401-1','GRI 405-1','GRI 14.10.4'],
+     colunas:['Homens','Mulheres','Total'], rotuloTabela:'Empregados por região e gênero'},
+
+    {id:'categoria', nome:'CATEGORIAS FUNCIONAIS DE EMPREGADOS', obrigatorio:true,
+     desc:'Discriminação de empregados por categoria (diretoria, média gerência, técnica, administrativa, produção). Estas informações costumam sair do próprio sistema de recursos humanos da organização.',
+     exemplo:['Diretoria','Média gerência','Técnica','Administrativa','Produção'],
+     usadoEm:['GRI 2-7','GRI 404-1','GRI 405-1','GRI 405-2'],
+     colunas:['Homens','Mulheres','Total'], rotuloTabela:'Empregados por categoria funcional e gênero'},
+
+    {id:'genero', nome:'GÊNEROS REPORTADOS', obrigatorio:true,
+     desc:'Como a empresa reporta gênero nas tabelas. Altere apenas se a sua organização usa outra classificação.',
+     exemplo:['Homens','Mulheres'],
+     usadoEm:['GRI 2-7','GRI 405-1','GRI 405-2'],
+     colunas:['Total'], rotuloTabela:'Empregados por gênero'},
+
+    {id:'faixa', nome:'FAIXAS ETÁRIAS', obrigatorio:false,
+     desc:'Faixas usadas na diversidade de empregados e de órgãos de governança.',
+     exemplo:['Abaixo de 30 anos','De 30 a 50 anos','Acima de 50 anos'],
+     usadoEm:['GRI 405-1'],
+     colunas:['Homens','Mulheres','Total'], rotuloTabela:'Empregados por faixa etária e gênero'},
+
+    {id:'unidade', nome:'UNIDADES OPERACIONAIS', obrigatorio:false,
+     desc:'Plantas, minas, fábricas ou centros de distribuição que respondem dados separadamente.',
+     exemplo:['Mina Norte','Planta Sul'],
+     usadoEm:['GRI 14.10.4','GRI 303-3','GRI 305-1','IGEE'],
+     colunas:['Valor'], rotuloTabela:'Dados por unidade operacional'},
+
+    {id:'residuo', nome:'TIPOS DE RESÍDUO', obrigatorio:false,
+     desc:'Classificação dos resíduos gerados, conforme a operação da empresa.',
+     exemplo:['Não perigoso reciclável','Não perigoso não reciclável','Perigoso'],
+     usadoEm:['GRI 306-3','GRI 306-4','GRI 306-5'],
+     colunas:['Toneladas'], rotuloTabela:'Resíduos por tipo'}
+  ];
+
+  function valoresParam(id){
+    if (!estado.parametros[id]) estado.parametros[id] = [];
+    return estado.parametros[id];
+  }
 
   // cada coleta contratada guarda a própria estrutura
   function C(){
@@ -1754,6 +1834,7 @@ var FRAMEWORKS = {"gri":{"nome":"GRI","descricao":"Global Reporting Initiative �
     }
     if (id === 'indicadores')   { desenharEquipe(); desenharEstimativa(); desenharAbasFw(); }
     if (id === 'notificacoes')  desenharNotificacoes();
+    if (id === 'parametros') desenharParametros();
     if (id === 'hierarquia' || id === 'indicadores' || id === 'notificacoes') desenharSeletorColeta();
     if (id === 'hierarquia')   { garantirRaiz(); desenharArvore(); }
     avisarEditor();
@@ -1788,6 +1869,13 @@ var FRAMEWORKS = {"gri":{"nome":"GRI","descricao":"Global Reporting Initiative �
         return false;
       }
 
+    }
+    if (id === 'parametros'){
+      var pend = parametrosPendentes();
+      if (pend.length){
+        alerta('Preencha os parâmetros obrigatórios: ' + pend.join(', ') + '.');
+        return false;
+      }
     }
     if (id === 'notificacoes'){
       var faltando = periodosSemPrazo();
@@ -5993,6 +6081,125 @@ var FRAMEWORKS = {"gri":{"nome":"GRI","descricao":"Global Reporting Initiative �
     if (el('ver-arvore').checked) desenharArvoreVisual();
   }
 
+  /* ---------- parâmetros de coleta ---------- */
+  function desenharParametros(){
+    var alvo = el('lista-parametros');
+    var preenchidos = PARAMETROS.filter(function(pm){ return valoresParam(pm.id).length; }).length;
+    var faltando = PARAMETROS.filter(function(pm){ return pm.obrigatorio && !valoresParam(pm.id).length; });
+
+    el('resumo-parametros').innerHTML =
+      '<span>Parâmetros preenchidos <b>' + preenchidos + ' de ' + PARAMETROS.length + '</b></span>' +
+      '<span>' + (faltando.length
+        ? '<b style="color:var(--vermelho-texto)">' + faltando.length + ' obrigatório(s) em branco</b>'
+        : '<b style="color:var(--verde)">todos os obrigatórios preenchidos</b>') + '</span>' +
+      '<span>Estas listas definem as linhas das tabelas nos formulários dos indicadores.</span>';
+
+    alvo.innerHTML = '';
+    PARAMETROS.forEach(function(pm){
+      var vals = valoresParam(pm.id);
+      var div = document.createElement('div');
+      div.className = 'bloco-param' + (pm.obrigatorio && !vals.length ? ' faltando' : '');
+      div.innerHTML =
+        '<div class="cab-param">' +
+          '<div><span class="nome-param">' + pm.nome +
+            (pm.obrigatorio ? ' <span class="obg-param">obrigatório</span>' : '') + '</span>' +
+            '<p class="desc-param">' + pm.desc + '</p>' +
+            '<div class="usos-param">Usado em: ' + pm.usadoEm.map(function(u){
+              return '<span class="pill">' + u + '</span>';
+            }).join('') + '</div></div>' +
+          '<button class="btn secundario pequeno" data-exemplo="' + pm.id + '">Usar sugestão</button>' +
+        '</div>' +
+        '<div class="corpo-param">' +
+          '<div class="col-valores"><span class="rot-mini">VALORES</span><div class="lista-valores" data-vals="' + pm.id + '"></div>' +
+            '<button class="link" data-add="' + pm.id + '">+ Adicionar mais</button></div>' +
+          '<div class="col-previa"><span class="rot-mini">COMO FICA NO FORMULÁRIO</span>' +
+            '<div class="previa-tabela" data-previa="' + pm.id + '"></div></div>' +
+        '</div>';
+      alvo.appendChild(div);
+      renderValores(pm);
+      renderPrevia(pm);
+
+      div.querySelector('[data-exemplo]').addEventListener('click', function(){
+        estado.parametros[pm.id] = pm.exemplo.slice();
+        desenharParametros();
+      });
+      div.querySelector('[data-add]').addEventListener('click', function(){
+        valoresParam(pm.id).push('');
+        renderValores(pm); renderPrevia(pm);
+        var campos = alvo.querySelectorAll('[data-vals="' + pm.id + '"] input');
+        if (campos.length) campos[campos.length - 1].focus();
+      });
+    });
+  }
+
+  function renderValores(pm){
+    var caixa = document.querySelector('[data-vals="' + pm.id + '"]');
+    var vals = valoresParam(pm.id);
+    if (!vals.length){
+      caixa.innerHTML = '<span class="vazio-param">Nenhum valor ainda — use a sugestão ou adicione o primeiro.</span>';
+      return;
+    }
+    caixa.innerHTML = vals.map(function(v, i){
+      return '<div class="linha-valor">' +
+        '<span class="ordem-valor">' + (i + 1) + '</span>' +
+        '<input type="text" value="' + esc(v) + '" data-i="' + i + '" placeholder="Ex.: ' + esc(pm.exemplo[0]) + '">' +
+        '<button class="mini" data-sobe="' + i + '" title="Subir">&#9650;</button>' +
+        '<button class="mini rem" data-del="' + i + '" title="Remover">&times;</button></div>';
+    }).join('');
+
+    caixa.querySelectorAll('input').forEach(function(inp){
+      inp.addEventListener('input', function(){
+        vals[Number(inp.dataset.i)] = inp.value;
+        renderPrevia(pm);
+      });
+    });
+    caixa.querySelectorAll('[data-del]').forEach(function(b){
+      b.addEventListener('click', function(){
+        vals.splice(Number(b.dataset.del), 1);
+        renderValores(pm); renderPrevia(pm); desenharParametros();
+      });
+    });
+    caixa.querySelectorAll('[data-sobe]').forEach(function(b){
+      b.addEventListener('click', function(){
+        var i = Number(b.dataset.sobe);
+        if (i === 0) return;
+        var t = vals[i]; vals[i] = vals[i-1]; vals[i-1] = t;
+        renderValores(pm); renderPrevia(pm);
+      });
+    });
+  }
+
+  function renderPrevia(pm){
+    var caixa = document.querySelector('[data-previa="' + pm.id + '"]');
+    var vals = valoresParam(pm.id).filter(function(v){ return v.trim(); });
+    var colunas = pm.colunas;
+    if (pm.id !== 'genero' && colunas.indexOf('Homens') !== -1){
+      var gen = valoresParam('genero').filter(function(v){ return v.trim(); });
+      if (gen.length) colunas = gen.concat(['Total']);
+    }
+    if (!vals.length){
+      caixa.innerHTML = '<div class="previa-vazia">A tabela do indicador fica sem linhas até você preencher os valores.</div>';
+      return;
+    }
+    caixa.innerHTML =
+      '<table class="tabela-limpa"><thead><tr><th>' + esc(pm.rotuloTabela) + '</th>' +
+        colunas.map(function(c){ return '<th class="num">' + esc(c) + '</th>'; }).join('') +
+      '</tr></thead><tbody>' +
+        vals.map(function(v){
+          return '<tr><td>' + esc(v) + '</td>' +
+            colunas.map(function(){ return '<td class="num vazio-cel">—</td>'; }).join('') + '</tr>';
+        }).join('') +
+        '<tr class="total-linha"><td>Total</td>' +
+          colunas.map(function(){ return '<td class="num vazio-cel">—</td>'; }).join('') + '</tr>' +
+      '</tbody></table>';
+  }
+
+  function parametrosPendentes(){
+    return PARAMETROS.filter(function(pm){
+      return pm.obrigatorio && !valoresParam(pm.id).filter(function(v){ return v.trim(); }).length;
+    }).map(function(pm){ return pm.nome.toLowerCase(); });
+  }
+
   /* ---------- notificações ---------- */
   var AVISOS = [
     {id:'abertura', titulo:'Quando a coleta abrir',      quem:'Respondentes e validadores',
@@ -6306,6 +6513,7 @@ var FRAMEWORKS = {"gri":{"nome":"GRI","descricao":"Global Reporting Initiative �
       if (!c.arquivo) pend.push('indicador customizado ' + (i+1) + ' sem referência anexada');
     });
     if (semCol) pend.push(semCol + ' indicador(es) sem coleta indicada');
+    if (parametrosPendentes().length) pend.push('parâmetros obrigatórios em branco: ' + parametrosPendentes().join(', '));
     if (periodosSemPrazo().length) pend.push('períodos sem prazo final: ' + periodosSemPrazo().join(', '));
     if (!avisosLigados().length) pend.push('nenhum aviso automático ligado');
     if (estado.equipe.length === 0) pend.push('nenhuma pessoa cadastrada na equipe');
@@ -6376,6 +6584,18 @@ var FRAMEWORKS = {"gri":{"nome":"GRI","descricao":"Global Reporting Initiative �
       });
       html += '</p>';
     }
+
+    html += '<h2 class="subtitulo">Parâmetros de coleta</h2>';
+    html += '<table class="resumo"><thead><tr><th>Parâmetro</th><th style="width:90px">Valores</th>' +
+            '<th>Conteúdo</th></tr></thead><tbody>';
+    PARAMETROS.forEach(function(pm){
+      var vals = valoresParam(pm.id).filter(function(v){ return v.trim(); });
+      html += '<tr><td><b>' + pm.nome + '</b></td><td>' + vals.length + '</td>' +
+        '<td>' + (vals.length ? vals.map(function(v){ return '<span class="pill">' + esc(v) + '</span>'; }).join('')
+                              : (pm.obrigatorio ? '<span style="color:var(--vermelho-texto)">obrigatório e em branco</span>'
+                                                : '<span style="color:var(--cinza-claro)">não informado</span>')) + '</td></tr>';
+    });
+    html += '</tbody></table>';
 
     html += '<h2 class="subtitulo">Coletas configuradas</h2>';
     html += '<table class="resumo"><thead><tr><th>Coleta</th><th style="width:130px">Indicadores</th>' +
@@ -6528,6 +6748,9 @@ var FRAMEWORKS = {"gri":{"nome":"GRI","descricao":"Global Reporting Initiative �
       empresa: estado.empresa,
       pontosFocais: estado.focais.map(function(f){ return {nome:f.nome, email:f.email, principal: !!f.principal}; }),
       anos: estado.anos, idiomas: estado.idiomas,
+      parametros: PARAMETROS.map(function(pm){
+        return {parametro: pm.nome, valores: valoresParam(pm.id).filter(function(v){ return v.trim(); })};
+      }),
       coletas: estado.coletas.map(function(col){ return {nome:col.nome, periodicidade:col.periodicidade}; }),
       contrato: {
         dataContratacao: contrato.dataContratacao, duracaoMeses: mesesContrato(),
