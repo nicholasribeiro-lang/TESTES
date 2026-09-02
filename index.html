@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Central ESG — Seleção de indicadores</title>
+<title>Central Report — Configuração do projeto</title>
 <style>
   :root{
     --azul:#1A4FA0; --azul-escuro:#1B3B7A; --tinta:#1F2A44; --cinza:#6B7280;
@@ -640,7 +640,14 @@
   .bloco-custom-admin .opcao{flex:1;min-width:260px;cursor:pointer}
   .bloco-custom-admin .campo{min-width:200px}
   .bloco-custom-admin .campo.desligado{opacity:.45;pointer-events:none}
-  .linha-coleta-adm{display:grid;grid-template-columns:52px 1fr 190px;gap:12px;align-items:end;margin-bottom:10px}
+  .linha-coleta-adm{display:grid;grid-template-columns:52px 1fr 170px;gap:12px;align-items:end;margin-bottom:10px}
+  .campo-quest{grid-column:2 / -1}
+  .chips-quest{display:flex;gap:8px;flex-wrap:wrap}
+  .chip-quest{border:1px solid var(--linha);background:#fff;border-radius:14px;padding:6px 12px;font-size:11px;
+    font-weight:600;color:var(--cinza);cursor:pointer}
+  .chip-quest.on{border-color:var(--azul);background:var(--chip);color:var(--azul)}
+  .alerta-quest{font-size:11px;color:#8A6400;background:#FEF3D6;padding:5px 10px;border-radius:10px;font-weight:600}
+  .chip-quest.custom.on{border-color:var(--laranja);background:#FEF3D6;color:#8A6400}
   .linha-coleta-adm .ordem{font-size:11px;font-weight:700;color:var(--cinza);padding-bottom:11px}
   @media (max-width:820px){.linha-coleta-adm{grid-template-columns:1fr}}
 
@@ -850,6 +857,15 @@
   .chip-mini.falta{background:#FEF3D6;color:#8A6400;font-weight:600}
   .chip-mini.pessoa{background:#fff;border:1px solid var(--linha)}
   .chip-mini.coleta{background:#EFEAFB;color:#5B3FA8;font-weight:600}
+  .chip-mini.tema{background:#FDF0E3;color:#8A5A00;font-weight:600}
+  .nota-setor{font-size:12px;color:#1B3B7A;background:#F3F7FD;border:1px solid #C3D7F5;border-radius:4px;
+    padding:10px 14px;margin-bottom:14px}
+  .faixa-sazonalidade{display:flex;align-items:flex-end;gap:16px;flex-wrap:wrap;padding:14px 16px;border:1px solid #C3D7F5;
+    border-radius:6px;background:#F7FAFE;margin-bottom:18px}
+  .faixa-sazonalidade .campo{gap:4px}
+  .faixa-sazonalidade label{font-size:10px;font-weight:700;letter-spacing:.4px;color:var(--cinza)}
+  .faixa-sazonalidade select{padding:8px 10px;border:1px solid #C9D8EC;border-radius:4px;font-size:12px;background:#fff;min-width:170px}
+  .faixa-sazonalidade .txt-saz{flex:1;min-width:260px;font-size:12px;color:var(--cinza);line-height:1.45}
   .bloco-coletas{margin-top:14px;padding-top:14px;border-top:1px solid #C3D7F5}
   .rot-coletas{font-size:11px;font-weight:600;color:#4A5568;display:block;margin-bottom:8px}
   .opcoes-coletas{display:flex;flex-wrap:wrap;gap:8px}
@@ -1081,22 +1097,40 @@
   .seletor-coleta .info-c{font-size:11px;color:var(--cinza)}
   .seletor-coleta .rotulo-sel{font-size:10px;font-weight:700;letter-spacing:.5px;color:var(--cinza-claro);width:100%;margin-bottom:2px}
 
+  .ilustra-hierarquia{display:flex;gap:30px;flex-wrap:wrap;margin:0 0 18px;padding:16px 20px;
+    border:1px solid var(--linha);border-radius:6px;background:#FBFCFE;align-items:flex-start}
+  .exemplo-org{display:flex;flex-direction:column;gap:8px}
+  .exemplo-org .rot-org{font-size:10px;font-weight:700;letter-spacing:.4px;color:var(--cinza)}
+  .exemplo-org svg{display:block}
+
   .alternar-arvore{display:inline-flex;align-items:center;gap:9px;font-size:12px;font-weight:600;color:#4A5568;cursor:pointer;margin-bottom:16px;padding:8px 12px;border:1px solid var(--linha);border-radius:4px;background:#fff}
   .alternar-arvore input{width:15px;height:15px;accent-color:var(--azul);cursor:pointer}
   .no-arvore.n4{border-color:#C6D3E8}
   .no.n4{margin-left:96px;border-left:3px solid #C6D3E8}
   .no.n4 .nivel{background:#EEF2F7;color:#5A6B85}
-  .visao-arvore{border:1px solid var(--linha);border-radius:4px;background:#FBFCFE;padding:20px;margin-bottom:20px;overflow-x:auto}
-  .nivel-arvore{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-bottom:26px;position:relative}
-  .nivel-arvore:last-child{margin-bottom:0}
-  .no-arvore{border:1px solid var(--linha);border-radius:6px;background:#fff;padding:10px 14px;min-width:150px;text-align:center;position:relative;box-shadow:0 1px 3px rgba(31,42,68,.06)}
-  .no-arvore .rot{font-size:9px;font-weight:700;letter-spacing:.4px;color:var(--cinza);display:block;margin-bottom:3px}
-  .no-arvore .nom{font-size:12px;font-weight:600;display:block}
-  .no-arvore .qtd{font-size:10px;color:var(--azul);display:block;margin-top:4px}
-  .no-arvore.n1{border-color:var(--azul);border-width:2px}
-  .no-arvore.n2{border-color:#A3BBDF}
-  .no-arvore .traco-cima{position:absolute;top:-18px;left:50%;width:1px;height:18px;background:#C3D7F5}
-  .rotulo-nivel{font-size:9px;font-weight:700;letter-spacing:.5px;color:var(--cinza-claro);text-align:center;margin-bottom:8px}
+  .visao-arvore{border:1px solid var(--linha);border-radius:6px;background:#FBFCFE;padding:24px 20px;margin-bottom:20px}
+  .rolagem-org{overflow-x:auto;padding-bottom:6px}
+  .arvore-org, .arvore-org ul{display:flex;justify-content:center;gap:26px;list-style:none;margin:0;padding:0;position:relative}
+  .arvore-org ul{padding-top:26px}
+  .arvore-org li{display:flex;flex-direction:column;align-items:center;position:relative;padding:0 6px}
+  /* haste que desce do pai */
+  .arvore-org ul::before{content:'';position:absolute;top:0;left:50%;width:1px;height:13px;background:#C3D7F5}
+  /* haste que sobe de cada filho + barra horizontal */
+  .arvore-org ul > li::before{content:'';position:absolute;top:-13px;left:50%;width:1px;height:13px;background:#C3D7F5}
+  .arvore-org ul > li::after{content:'';position:absolute;top:-13px;left:0;right:0;height:1px;background:#C3D7F5}
+  .arvore-org ul > li:first-child::after{left:50%}
+  .arvore-org ul > li:last-child::after{right:50%}
+  .arvore-org ul > li:only-child::after{display:none}
+
+  .no-org{border:1px solid var(--linha);border-radius:8px;background:#fff;padding:10px 16px;min-width:170px;
+    text-align:center;box-shadow:0 1px 3px rgba(31,42,68,.07);position:relative;z-index:1}
+  .no-org.n1{border:2px solid var(--azul)}
+  .no-org.n2{border-color:#A3BBDF}
+  .no-org.n3{border-color:#C6D3E8}
+  .no-org.n4{border-color:#DCE4EF}
+  .rot-org-no{display:block;font-size:8px;font-weight:700;letter-spacing:.5px;color:var(--cinza-claro);margin-bottom:3px}
+  .nome-org{display:block;font-size:12px;font-weight:600;color:var(--tinta)}
+  .qtd-org{display:block;font-size:10px;color:var(--azul);margin-top:4px}
 
   .etiqueta-marca{position:absolute;transform:translate(-50%,-50%);width:24px;height:24px;border-radius:50%;border:2px solid #fff;color:#fff;font-size:11px;font-weight:700;cursor:pointer;padding:0;box-shadow:0 2px 6px rgba(31,42,68,.25)}
   .nota-editor textarea{width:100%;min-height:56px;border:none;background:transparent;resize:vertical;font-size:12px;font-family:inherit;color:var(--tinta);outline:none}
@@ -1239,6 +1273,11 @@
             <span class="dica" id="c-vigencia"></span>
           </div>
           <div class="campo">
+            <label for="c-setor">Setor do cliente</label>
+            <select id="c-setor"></select>
+            <span class="dica">Filtra os suplementos setoriais do GRI no cardápio do ponto focal.</span>
+          </div>
+          <div class="campo">
             <label for="c-focal-nome">Ponto focal que receberá o link</label>
             <input id="c-focal-nome" type="text" placeholder="Nome">
           </div>
@@ -1251,20 +1290,8 @@
 
       <div class="cartao">
         <h2>Módulos contratados</h2>
-        <p class="ajuda">Definem quais partes do Central ESG ficam disponíveis para a empresa.</p>
+        <p class="ajuda">Definem quais partes do Central Report ficam disponíveis para a empresa.</p>
         <div class="opcoes" id="c-modulos"></div>
-      </div>
-
-      <div class="cartao">
-        <h2>Coletas contratadas</h2>
-        <p class="ajuda">Quantas coletas independentes o contrato prevê. Empresas costumam separar por frequência — uma anual e outra mensal — ou reservar uma só para os customizados. Cada coleta tem sua própria hierarquia, seus indicadores e suas notificações; coletas filhas, netas e bisnetas são desdobramentos internos e não contam nesta quantidade.</p>
-        <div class="grade" style="max-width:320px;margin-bottom:18px">
-          <div class="campo">
-            <label for="c-qtd-coletas">Quantidade de coletas</label>
-            <input id="c-qtd-coletas" type="number" min="1" max="12" value="1">
-          </div>
-        </div>
-        <div id="c-lista-coletas"></div>
       </div>
 
       <div class="cartao">
@@ -1285,6 +1312,18 @@
             <span class="dica">O ponto focal descreve exatamente essa quantidade, sem poder acrescentar.</span>
           </div>
         </div>
+      </div>
+
+      <div class="cartao">
+        <h2>Coletas contratadas</h2>
+        <p class="ajuda">Quantas coletas independentes o contrato prevê e quais questionários cada uma usa. Empresas costumam separar por frequência — uma anual e outra mensal — ou reservar uma só para os customizados. Cada coleta tem sua própria hierarquia, seus indicadores e suas notificações; coletas filhas, netas e bisnetas são desdobramentos internos e não contam nesta quantidade.</p>
+        <div class="grade" style="max-width:320px;margin-bottom:18px">
+          <div class="campo">
+            <label for="c-qtd-coletas">Quantidade de coletas</label>
+            <input id="c-qtd-coletas" type="number" min="1" max="12" value="1">
+          </div>
+        </div>
+        <div id="c-lista-coletas"></div>
       </div>
 
       <div class="cartao">
@@ -1335,8 +1374,8 @@
 <div id="focal-wizard">
 
 <div class="cabecalho">
-  <h1>Seleção de indicadores</h1>
-  <p>Este formulário define o escopo da sua coleta no Central ESG. Escolha a periodicidade, os frameworks contratados e quais indicadores de cada um entram no projeto. Ao final, envie para a equipe do Grupo Report configurar a plataforma.</p>
+  <h1>Configuração do projeto</h1>
+  <p>Inicie a configuração das suas coletas na Central Report. Defina a estrutura, a periodicidade e os indicadores do projeto. Ao finalizar, a equipe do Grupo Report irá configurar a plataforma.</p>
 </div>
 
 <nav class="passos" id="passos"></nav>
@@ -1359,7 +1398,9 @@
       <button class="btn secundario pequeno" onclick="adicionarFocal()">+ Adicionar ponto focal</button>
 
       <h3 class="subtitulo">Hierarquia de coletas</h3>
-      <p class="ajuda">Empresas com holding, subsidiárias ou plantas costumam separar a coleta em níveis: uma coleta mãe consolida as filhas, que por sua vez podem ter netas. Se marcar sim, um passo a mais aparece para você montar a estrutura e distribuir os indicadores.</p>
+      <p class="ajuda">Empresas com diferentes unidades, subsidiárias, plantas ou estruturas organizacionais podem organizar a coleta em diferentes níveis de hierarquia. Uma coleta pode consolidar informações de outras coletas, permitindo estruturar os indicadores de acordo com a organização da empresa.<br>
+      <b>Se marcar sim, um passo a mais aparecerá para você definir a estrutura hierárquica e distribuir os indicadores.</b></p>
+      <div class="ilustra-hierarquia" id="ilustra-hierarquia"></div>
       <div class="opcoes" id="opcoes-hierarquia"></div>
     </div>
   </section>
@@ -1380,6 +1421,7 @@
       <div class="seletor-coleta" data-sel="indicadores"></div>
       <h2>Escopo de indicadores</h2>
       <p class="ajuda">Selecione os indicadores que farão parte do projeto e defina, para cada um, a sazonalidade e os responsáveis. Indicadores que exigem adaptação — texto, fórmula ou campos adicionais — podem ser sinalizados em "Personalizar".</p>
+      <div class="faixa-sazonalidade" id="faixa-sazonalidade"></div>
       <div class="caixa-equipe">
         <button class="equipe-topo" id="btn-equipe" aria-expanded="false">
           <span class="seta">&#9654;</span>
@@ -1411,7 +1453,7 @@
       <h2>Parâmetros de coleta</h2>
       <p class="ajuda">Informações usadas para customizar os formulários de acordo com as características da sua empresa.
         As listas abaixo viram as <b>linhas das tabelas</b> dos indicadores — o que você escrever aqui é o que o respondente
-        vai ver no formulário.</p>
+        vai ver no formulário. Aparecem apenas os parâmetros exigidos pelos questionários contratados.</p>
       <div class="faixa-contrato" id="resumo-parametros"></div>
       <div id="lista-parametros"></div>
     </div>
@@ -1422,11 +1464,11 @@
     <div class="cartao">
       <div class="seletor-coleta" data-sel="hierarquia"></div>
       <h2>Estrutura das coletas</h2>
-      <p class="ajuda">Monte aqui a árvore de coletas do projeto: a coleta mãe consolida as filhas, que podem ter netas. No passo seguinte, cada indicador é apontado para as coletas em que deve aparecer.</p>
+      <p class="ajuda">Monte aqui a estrutura de coletas do projeto. Uma coleta pode consolidar informações de outras coletas, permitindo organizar os dados em diferentes níveis. No passo seguinte, cada indicador será associado às coletas em que deverá aparecer.</p>
       <div id="aviso-hierarquia"></div>
       <label class="alternar-arvore">
         <input type="checkbox" id="ver-arvore">
-        <span>Mostrar árvore genealógica das coletas</span>
+        <span>Visualizar hierarquia das coletas</span>
       </label>
       <div class="visao-arvore oculto" id="arvore-visual"></div>
       <div id="arvore"></div>
@@ -1472,7 +1514,7 @@
     <div class="cartao enviado">
       <div class="marca-ok">&#10003;</div>
       <h2>Seleção enviada</h2>
-      <p>A equipe do Grupo Report recebeu seu escopo e vai configurar a coleta no Central ESG. Você recebe uma confirmação por e-mail em até 2 dias úteis.</p>
+      <p>A equipe do Grupo Report recebeu seu escopo e vai configurar a coleta no Central Report. Você recebe uma confirmação por e-mail em até 2 dias úteis.</p>
       <div class="protocolo" id="protocolo"></div>
       <p id="resumo-envio"></p>
       <div class="acoes-enviado">
@@ -1658,7 +1700,7 @@ var FRAMEWORKS = {"gri":{"nome":"GRI","descricao":"Global Reporting Initiative �
   var ETAPAS = [
     {id:'ident',         nome:'Identificação', sempre:true},
     {id:'frameworks',    nome:'Questionários', sempre:true},
-    {id:'parametros',    nome:'Parâmetros',    quando:function(){ return estado.frameworks.length > 0; }},
+    {id:'parametros',    nome:'Parâmetros',    quando:function(){ return parametrosAplicaveis().length > 0; }},
     {id:'hierarquia',    nome:'Hierarquia',    quando:function(){ return estado.temHierarquia; }},
     {id:'indicadores',   nome:'Indicadores',   quando:function(){ return estado.frameworks.length > 0; }},
     {id:'notificacoes',  nome:'Notificações',  sempre:true},
@@ -1681,42 +1723,67 @@ var FRAMEWORKS = {"gri":{"nome":"GRI","descricao":"Global Reporting Initiative �
 
   // listas que viram as linhas das tabelas dos indicadores
   var PARAMETROS = [
-    {id:'regiao', nome:'DISTRIBUIÇÃO REGIONAL', obrigatorio:true,
+    {id:'tema', nome:'TEMAS MATERIAIS', obrigatorio:true, questionarios:['gri'],
+     desc:'Temas materiais definidos na sua matriz de materialidade. Cada tema gera uma resposta do GRI 3-3 e pode ser usado para agrupar os indicadores relacionados.',
+     exemplo:['Mudanças climáticas','Gestão hídrica','Saúde e segurança','Relacionamento com comunidades'],
+     usadoEm:['GRI 3-2','GRI 3-3'],
+     colunas:['Gestão do tema'], rotuloTabela:'Tema material'},
+
+    {id:'regiao', nome:'DISTRIBUIÇÃO REGIONAL', obrigatorio:true, questionarios:['gri'],
      desc:'Discriminação da operação da empresa, considerando sede e filiais, que podem ser por regiões (norte, nordeste, centro-oeste) ou até mesmo países (Brasil, Argentina) como serão reportados no relatório.',
      exemplo:['Locais','Brasil','Regionais','Exterior'],
      usadoEm:['GRI 2-7','GRI 2-8','GRI 401-1','GRI 405-1','GRI 14.10.4'],
      colunas:['Homens','Mulheres','Total'], rotuloTabela:'Empregados por região e gênero'},
 
-    {id:'categoria', nome:'CATEGORIAS FUNCIONAIS DE EMPREGADOS', obrigatorio:true,
+    {id:'categoria', nome:'CATEGORIAS FUNCIONAIS DE EMPREGADOS', obrigatorio:true, questionarios:['gri'],
      desc:'Discriminação de empregados por categoria (diretoria, média gerência, técnica, administrativa, produção). Estas informações costumam sair do próprio sistema de recursos humanos da organização.',
      exemplo:['Diretoria','Média gerência','Técnica','Administrativa','Produção'],
      usadoEm:['GRI 2-7','GRI 404-1','GRI 405-1','GRI 405-2'],
      colunas:['Homens','Mulheres','Total'], rotuloTabela:'Empregados por categoria funcional e gênero'},
 
-    {id:'genero', nome:'GÊNEROS REPORTADOS', obrigatorio:true,
+    {id:'genero', nome:'GÊNEROS REPORTADOS', obrigatorio:true, questionarios:['gri'],
      desc:'Como a empresa reporta gênero nas tabelas. Altere apenas se a sua organização usa outra classificação.',
      exemplo:['Homens','Mulheres'],
      usadoEm:['GRI 2-7','GRI 405-1','GRI 405-2'],
      colunas:['Total'], rotuloTabela:'Empregados por gênero'},
 
-    {id:'faixa', nome:'FAIXAS ETÁRIAS', obrigatorio:false,
+    {id:'faixa', nome:'FAIXAS ETÁRIAS', obrigatorio:false, questionarios:['gri'],
      desc:'Faixas usadas na diversidade de empregados e de órgãos de governança.',
      exemplo:['Abaixo de 30 anos','De 30 a 50 anos','Acima de 50 anos'],
      usadoEm:['GRI 405-1'],
      colunas:['Homens','Mulheres','Total'], rotuloTabela:'Empregados por faixa etária e gênero'},
 
-    {id:'unidade', nome:'UNIDADES OPERACIONAIS', obrigatorio:false,
+    {id:'unidade', nome:'UNIDADES OPERACIONAIS', obrigatorio:false, questionarios:['gri','igee','sasb'],
      desc:'Plantas, minas, fábricas ou centros de distribuição que respondem dados separadamente.',
      exemplo:['Mina Norte','Planta Sul'],
      usadoEm:['GRI 14.10.4','GRI 303-3','GRI 305-1','IGEE'],
      colunas:['Valor'], rotuloTabela:'Dados por unidade operacional'},
 
-    {id:'residuo', nome:'TIPOS DE RESÍDUO', obrigatorio:false,
+    {id:'residuo', nome:'TIPOS DE RESÍDUO', obrigatorio:false, questionarios:['gri','sasb'],
      desc:'Classificação dos resíduos gerados, conforme a operação da empresa.',
      exemplo:['Não perigoso reciclável','Não perigoso não reciclável','Perigoso'],
      usadoEm:['GRI 306-3','GRI 306-4','GRI 306-5'],
      colunas:['Toneladas'], rotuloTabela:'Resíduos por tipo'}
   ];
+
+  // questionários usados em todo o projeto
+  function todosQuestionarios(){
+    var s = {};
+    estado.coletas.forEach(function(col){
+      (col.frameworks || []).forEach(function(f){ s[f] = true; });
+    });
+    if (!Object.keys(s).length) estado.frameworks.forEach(function(f){ s[f] = true; });
+    return Object.keys(s);
+  }
+  function parametrosAplicaveis(){
+    var qs = todosQuestionarios();
+    return PARAMETROS.filter(function(pm){
+      return pm.questionarios.some(function(q){ return qs.indexOf(q) !== -1; });
+    });
+  }
+  function temasMateriais(){
+    return valoresParam('tema').filter(function(v){ return v.trim(); });
+  }
 
   function valoresParam(id){
     if (!estado.parametros[id]) estado.parametros[id] = [];
@@ -1730,6 +1797,12 @@ var FRAMEWORKS = {"gri":{"nome":"GRI","descricao":"Global Reporting Initiative �
     return estado.coletas[estado.coletaAtiva];
   }
   function perAtual(){ return C().periodicidade || 'anual'; }
+  // questionários vinculados à coleta ativa (definidos pelo administrador no contrato)
+  function frameworksDaColeta(){
+    var f = C().frameworks;
+    return (f && f.length) ? f : estado.frameworks;
+  }
+  function sazonalidadePadraoAtual(){ return C().sazonalidadePadrao || perAtual(); }
 
   function novaColeta(nome, periodicidade){
     return {
@@ -1748,6 +1821,12 @@ var FRAMEWORKS = {"gri":{"nome":"GRI","descricao":"Global Reporting Initiative �
     estado.coletas.forEach(function(col, i){
       col.nome = contrato.coletas[i].nome || ('Coleta ' + (i + 1));
       col.periodicidade = contrato.coletas[i].periodicidade || 'anual';
+      col.frameworks = (contrato.coletas[i].questionarios || []).slice();
+      if (!col.frameworks.length) col.frameworks = contrato.questionarios.slice();
+      if (!col.sazonalidadePadrao) col.sazonalidadePadrao = col.periodicidade;
+      var algumaMarcou = contrato.coletas.some(function(x){ return x.customizados; });
+      col.temCustomizados = contrato.temCustomizados &&
+        (algumaMarcou ? !!contrato.coletas[i].customizados : true);
     });
     if (estado.coletaAtiva >= estado.coletas.length) estado.coletaAtiva = 0;
   }
@@ -1758,6 +1837,38 @@ var FRAMEWORKS = {"gri":{"nome":"GRI","descricao":"Global Reporting Initiative �
   }
 
   // preenchido pelo administrador na outra visão
+  var SETORES = [
+    {id:'', nome:'Não aplicável / multissetorial', prefixos:[]},
+    {id:'MM',  nome:'Mineração e metais',          prefixos:['MM']},
+    {id:'EU',  nome:'Energia e utilities',         prefixos:['EU']},
+    {id:'FS',  nome:'Serviços financeiros',        prefixos:['FS']},
+    {id:'CRE', nome:'Construção e imóveis',        prefixos:['CRE']},
+    {id:'FP',  nome:'Alimentos e bebidas',         prefixos:['FP']},
+    {id:'EO',  nome:'Organização de eventos',      prefixos:['EO']},
+    {id:'M',   nome:'Mídia',                       prefixos:['M']},
+    {id:'NGO', nome:'Organizações sem fins lucrativos', prefixos:['NGO']}
+  ];
+  var TODOS_PREFIXOS = ['MM','EU','FS','CRE','FP','EO','NGO','M'];
+
+  // um grupo é setorial quando seus códigos usam prefixo de suplemento setorial
+  function prefixoSetorial(grupo){
+    var cod = (grupo.itens[0] || {}).cod || '';
+    for (var i = 0; i < TODOS_PREFIXOS.length; i++){
+      var p = TODOS_PREFIXOS[i];
+      if (new RegExp('^' + p + '\\d').test(cod)) return p;
+    }
+    return null;
+  }
+  // grupos visíveis conforme o setor do cliente
+  function gruposVisiveis(fwId){
+    var fw = FRAMEWORKS[fwId];
+    if (fwId !== 'gri') return fw.grupos.map(function(g, i){ return {g:g, gi:i}; });
+    return fw.grupos.map(function(g, i){ return {g:g, gi:i}; }).filter(function(x){
+      var pre = prefixoSetorial(x.g);
+      return !pre || pre === contrato.setor;
+    });
+  }
+
   var MODULOS = [
     {id:'coleta',      titulo:'Módulo de Coleta',      sub:'Formulários, respondentes, validadores e janelas de coleta.'},
     {id:'gestao',      titulo:'Módulo de Gestão',      sub:'Dashboards, metas, análises e acompanhamento de desempenho.'},
@@ -1770,8 +1881,9 @@ var FRAMEWORKS = {"gri":{"nome":"GRI","descricao":"Global Reporting Initiative �
     fimVigencia:'2028-01-15',
     modulos:['coleta','comunicacao'],
     qtdColetas:2,
-    coletas:[{nome:'Inventário GEE Trimestral', periodicidade:'trimestral'},
-             {nome:'Relato Anual de Sustentabilidade', periodicidade:'anual'}],
+    setor:'MM',
+    coletas:[{nome:'Inventário GEE Trimestral', periodicidade:'trimestral', questionarios:['igee'], customizados:false},
+             {nome:'Relato Anual de Sustentabilidade', periodicidade:'anual', questionarios:['gri'], customizados:true}],
     temCustomizados:true,
     focalNome:CONVIDADO.nome,
     focalEmail:CONVIDADO.email,
@@ -2043,12 +2155,50 @@ var FRAMEWORKS = {"gri":{"nome":"GRI","descricao":"Global Reporting Initiative �
   }
   function fimVigencia(){ return contrato.fimVigencia || ''; }
 
+  function caixaOrg(x, y, w, texto, cor, borda){
+    return '<rect x="' + x + '" y="' + y + '" width="' + w + '" height="26" rx="5" fill="' + cor +
+      '" stroke="' + borda + '"/>' +
+      '<text x="' + (x + w/2) + '" y="' + (y + 17) + '" text-anchor="middle" font-size="9" ' +
+      'font-family="Inter,Arial" fill="#1F2A44">' + texto + '</text>';
+  }
+  function ligacaoOrg(x1, y1, x2, y2){
+    var meio = y1 + 11;
+    return '<path d="M' + x1 + ' ' + y1 + ' V' + meio + ' H' + x2 + ' V' + y2 + '" fill="none" stroke="#C3D7F5"/>';
+  }
+
+  function desenharIlustracaoHierarquia(){
+    var alvo = el('ilustra-hierarquia');
+    if (!alvo) return;
+    var comH =
+      '<svg width="300" height="130" viewBox="0 0 300 130">' +
+        caixaOrg(85, 4, 130, 'Holding — consolidado', '#E3F0FB', '#1A4FA0') +
+        ligacaoOrg(150, 30, 60, 52) + ligacaoOrg(150, 30, 240, 52) +
+        caixaOrg(5, 52, 110, 'Unidade Norte', '#F3F7FD', '#A3BBDF') +
+        caixaOrg(185, 52, 110, 'Unidade Sul', '#F3F7FD', '#A3BBDF') +
+        ligacaoOrg(60, 78, 40, 100) + ligacaoOrg(60, 78, 150, 100) +
+        caixaOrg(0, 100, 80, 'Mina A', '#F8FAFC', '#CBD5E1') +
+        caixaOrg(110, 100, 80, 'Mina B', '#F8FAFC', '#CBD5E1') +
+      '</svg>';
+    var semH =
+      '<svg width="180" height="130" viewBox="0 0 180 130">' +
+        caixaOrg(25, 4, 130, 'Coleta única', '#E3F0FB', '#1A4FA0') +
+        '<text x="90" y="60" text-anchor="middle" font-size="9" font-family="Inter,Arial" fill="#94A3B8">' +
+        'todos os indicadores</text>' +
+        '<text x="90" y="74" text-anchor="middle" font-size="9" font-family="Inter,Arial" fill="#94A3B8">' +
+        'em um só lugar</text>' +
+      '</svg>';
+    alvo.innerHTML =
+      '<div class="exemplo-org"><span class="rot-org">COM HIERARQUIA</span>' + comH + '</div>' +
+      '<div class="exemplo-org"><span class="rot-org">COLETA ÚNICA</span>' + semH + '</div>';
+  }
+
   function desenharHierarquiaOpcao(){
+    desenharIlustracaoHierarquia();
     var caixa = el('opcoes-hierarquia');
     caixa.innerHTML = '';
     [
-      {v:true,  titulo:'Sim, com hierarquia', sub:'Coleta mãe consolidando filhas e, se preciso, netas. Cada nível recebe seus próprios indicadores.'},
-      {v:false, titulo:'Não, coleta única',   sub:'Todos os indicadores em uma única coleta, sem consolidação entre níveis.'}
+      {v:true,  titulo:'Sim, com hierarquia', sub:'Organize as coletas em diferentes níveis, com consolidação das informações entre eles. Cada nível pode receber seus próprios indicadores.'},
+      {v:false, titulo:'Não, coleta única',   sub:'Todos os indicadores serão registrados em uma única coleta, sem consolidação entre diferentes níveis.'}
     ].forEach(function(o){
       var b = document.createElement('button');
       b.className = 'opcao';
@@ -2224,7 +2374,7 @@ var FRAMEWORKS = {"gri":{"nome":"GRI","descricao":"Global Reporting Initiative �
   function pegarDetalhe(fwId, chave){
     if (!C().detalhes[fwId]) C().detalhes[fwId] = {};
     var d = C().detalhes[fwId][chave];
-    if (!d) d = C().detalhes[fwId][chave] = {sazonalidade:'', respondentes:[], validadores:[], coletas:[]};
+    if (!d) d = C().detalhes[fwId][chave] = {sazonalidade:'', respondentes:[], validadores:[], coletas:[], tema:''};
     if (!d.respondentes) d.respondentes = d.respondente ? [d.respondente] : [];
     if (!d.validadores)  d.validadores  = d.validador  ? [d.validador]  : [];
     if (!d.coletas) d.coletas = [];
@@ -2232,9 +2382,10 @@ var FRAMEWORKS = {"gri":{"nome":"GRI","descricao":"Global Reporting Initiative �
   }
   function detalheDe(fwId, chave){
     var d = (C().detalhes[fwId] || {})[chave];
-    if (!d) return {sazonalidade:'', respondentes:[], validadores:[], coletas:[]};
+    if (!d) return {sazonalidade:'', tema:'', respondentes:[], validadores:[], coletas:[]};
     return {
       sazonalidade: d.sazonalidade || '',
+      tema: d.tema || '',
       respondentes: d.respondentes || (d.respondente ? [d.respondente] : []),
       validadores:  d.validadores  || (d.validador  ? [d.validador]  : []),
       coletas: d.coletas || []
@@ -2246,7 +2397,7 @@ var FRAMEWORKS = {"gri":{"nome":"GRI","descricao":"Global Reporting Initiative �
   }
   function sazonalidadeDe(fwId, chave){
     var d = (C().detalhes[fwId] || {})[chave];
-    return (d && d.sazonalidade) ? d.sazonalidade : perAtual();
+    return (d && d.sazonalidade) ? d.sazonalidade : sazonalidadePadraoAtual();
   }
   function rotuloPeriodo(id){
     var p = PERIODICIDADES.filter(function(x){ return x.id === id; })[0];
@@ -2256,7 +2407,7 @@ var FRAMEWORKS = {"gri":{"nome":"GRI","descricao":"Global Reporting Initiative �
   /* ---------- estimativa de esforço ---------- */
   function calcularLancamentos(){
     var total = 0;
-    estado.frameworks.forEach(function(fwId){
+    frameworksDaColeta().forEach(function(fwId){
       var sel = C().selecionados[fwId] || {};
       Object.keys(sel).forEach(function(chave){
         total += (JANELAS[sazonalidadeDe(fwId, chave)] || 1);
@@ -2313,12 +2464,22 @@ var FRAMEWORKS = {"gri":{"nome":"GRI","descricao":"Global Reporting Initiative �
                     '</span><span class="contagem">' + fw.total + ' indicadores</span></span>';
       b.addEventListener('click', function(){
         var i = contrato.questionarios.indexOf(id);
-        if (i === -1) contrato.questionarios.push(id); else contrato.questionarios.splice(i, 1);
+        if (i === -1){
+          contrato.questionarios.push(id);
+        } else {
+          contrato.questionarios.splice(i, 1);
+          contrato.coletas.forEach(function(c){
+            c.questionarios = (c.questionarios || []).filter(function(q){ return q !== id; });
+          });
+        }
         desenharAdmin();
       });
       q.appendChild(b);
     });
 
+    el('c-setor').innerHTML = SETORES.map(function(s){
+      return '<option value="' + s.id + '"' + (contrato.setor === s.id ? ' selected' : '') + '>' + s.nome + '</option>';
+    }).join('');
     caixasAdmin('c-anos', ANOS, contrato.anos);
     caixasAdmin('c-idiomas', IDIOMAS, contrato.idiomas);
 
@@ -2346,7 +2507,7 @@ var FRAMEWORKS = {"gri":{"nome":"GRI","descricao":"Global Reporting Initiative �
   function desenharColetasContratadas(){
     var qtd = Math.max(1, Number(el('c-qtd-coletas').value) || 1);
     contrato.qtdColetas = qtd;
-    while (contrato.coletas.length < qtd) contrato.coletas.push({nome:'', periodicidade:'anual'});
+    while (contrato.coletas.length < qtd) contrato.coletas.push({nome:'', periodicidade:'anual', questionarios:[], customizados:false});
     if (contrato.coletas.length > qtd) contrato.coletas.length = qtd;
 
     var caixa = el('c-lista-coletas');
@@ -2361,9 +2522,35 @@ var FRAMEWORKS = {"gri":{"nome":"GRI","descricao":"Global Reporting Initiative �
         '<div class="campo"><label>Periodicidade</label><select data-cc="per">' +
           PERIODICIDADES.map(function(pp){
             return '<option value="' + pp.id + '"' + (c.periodicidade === pp.id ? ' selected' : '') + '>' + pp.titulo + '</option>';
-          }).join('') + '</select></div>';
+          }).join('') + '</select></div>' +
+        '<div class="campo campo-quest"><label>Questionários habilitados nesta coleta</label><div class="chips-quest">' +
+          contrato.questionarios.map(function(q){
+            var on = (c.questionarios || []).indexOf(q) !== -1;
+            return '<button class="chip-quest' + (on ? ' on' : '') + '" data-q="' + q + '">' + FRAMEWORKS[q].nome + '</button>';
+          }).join('') +
+          (contrato.temCustomizados
+            ? '<button class="chip-quest custom' + (c.customizados ? ' on' : '') + '" data-custom="1">' +
+              '&#9733; Customizados</button>' : '') +
+          (!contrato.questionarios.length
+            ? '<span class="dica">marque primeiro os questionários contratados no cartão acima</span>'
+            : (!(c.questionarios || []).length
+                ? '<span class="alerta-quest">nenhum marcado — o ponto focal verá todos os contratados</span>' : '')) +
+        '</div></div>';
       div.querySelector('[data-cc=nome]').addEventListener('input', function(e){ c.nome = e.target.value; });
       div.querySelector('[data-cc=per]').addEventListener('change', function(e){ c.periodicidade = e.target.value; });
+      var bc = div.querySelector('[data-custom]');
+      if (bc) bc.addEventListener('click', function(){
+        c.customizados = !c.customizados;
+        desenharColetasContratadas();
+      });
+      div.querySelectorAll('[data-q]').forEach(function(b){
+        b.addEventListener('click', function(){
+          c.questionarios = c.questionarios || [];
+          var i2 = c.questionarios.indexOf(b.dataset.q);
+          if (i2 === -1) c.questionarios.push(b.dataset.q); else c.questionarios.splice(i2, 1);
+          desenharColetasContratadas();
+        });
+      });
       caixa.appendChild(div);
     });
   }
@@ -2431,6 +2618,7 @@ var FRAMEWORKS = {"gri":{"nome":"GRI","descricao":"Global Reporting Initiative �
     estado.anos          = contrato.anos.slice();
     estado.idiomas       = contrato.idiomas.slice();
     estado.frameworks    = contrato.questionarios.slice();
+    estado.temCustomizados = !!contrato.temCustomizados && contrato.qtdCustomizados > 0;
     estado.focais = [{id:'f0', nome:contrato.focalNome || CONVIDADO.nome,
                       email:contrato.focalEmail || CONVIDADO.email, principal:true}]
                     .concat(estado.focais.filter(function(f){ return !f.principal; }));
@@ -3181,8 +3369,8 @@ var FRAMEWORKS = {"gri":{"nome":"GRI","descricao":"Global Reporting Initiative �
       '<div class="aviso-escopo-linha">' +
         '<span class="txt"><b>Escopo do projeto:</b> ' + totalInd + ' indicador(es) em ' +
         estado.coletas.length + ' coleta(s) contratada(s). ' +
-        'O formulário de seleção define quais indicadores entram, quem responde e quando cada período abre.</span>' +
-        '<button class="btn secundario" id="abrir-form">Abrir formulário de seleção</button>' +
+        'A configuração do projeto define quais indicadores entram, quem responde e quando cada período abre.</span>' +
+        '<button class="btn secundario" id="abrir-form">Abrir configuração do projeto</button>' +
       '</div>';
     el('abrir-form').addEventListener('click', function(){ trocarTelaFocal('form'); });
 
@@ -5091,7 +5279,7 @@ var FRAMEWORKS = {"gri":{"nome":"GRI","descricao":"Global Reporting Initiative �
                       'Respondentes (e-mails)','Validadores (e-mails)','Coletas em que aparece'];
     var linhas = [];
 
-    estado.frameworks.forEach(function(fwId){
+    frameworksDaColeta().forEach(function(fwId){
       var sel = C().selecionados[fwId] || {};
       Object.keys(sel).forEach(function(chave){
         var partes = chave.split('_');
@@ -5221,7 +5409,7 @@ var FRAMEWORKS = {"gri":{"nome":"GRI","descricao":"Global Reporting Initiative �
     }
 
     var indice = {};
-    estado.frameworks.forEach(function(fwId){
+    frameworksDaColeta().forEach(function(fwId){
       FRAMEWORKS[fwId].grupos.forEach(function(g, gi){
         g.itens.forEach(function(it, ii){
           indice[(FRAMEWORKS[fwId].nome + '||' + it.cod).toLowerCase().trim()] = {fwId:fwId, chave:chaveItem(gi, ii)};
@@ -5332,16 +5520,53 @@ var FRAMEWORKS = {"gri":{"nome":"GRI","descricao":"Global Reporting Initiative �
     return t;
   }
 
+  function desenharSazonalidadePadrao(){
+    var alvo = el('faixa-sazonalidade');
+    if (!alvo) return;
+    var atual = sazonalidadePadraoAtual();
+    var excecoes = 0;
+    frameworksDaColeta().forEach(function(fwId){
+      var sel = C().selecionados[fwId] || {};
+      Object.keys(sel).forEach(function(k){
+        var d = (C().detalhes[fwId] || {})[k];
+        if (d && d.sazonalidade && d.sazonalidade !== atual) excecoes++;
+      });
+    });
+
+    alvo.innerHTML =
+      '<div class="campo"><label>Sazonalidade padrão desta coleta</label><select id="saz-padrao">' +
+        sazonalidadesPermitidas().map(function(pp){
+          return '<option value="' + pp.id + '"' + (atual === pp.id ? ' selected' : '') + '>' + pp.titulo + '</option>';
+        }).join('') + '</select></div>' +
+      '<span class="txt-saz">Vale para todos os indicadores desta coleta. Só ajuste caso a caso quem fugir da regra — ' +
+        'a exceção fica marcada em "Configuração".' +
+        (excecoes ? ' <b>' + excecoes + ' indicador(es) com sazonalidade própria.</b>' : '') + '</span>' +
+      (excecoes ? '<button class="btn secundario pequeno" id="limpar-excecoes">Voltar todos ao padrão</button>' : '');
+
+    el('saz-padrao').addEventListener('change', function(e){
+      C().sazonalidadePadrao = e.target.value;
+      desenharSazonalidadePadrao(); desenharEstimativa(); desenharAbasFw();
+    });
+    var lim = el('limpar-excecoes');
+    if (lim) lim.addEventListener('click', function(){
+      frameworksDaColeta().forEach(function(fwId){
+        Object.keys(C().detalhes[fwId] || {}).forEach(function(k){ C().detalhes[fwId][k].sazonalidade = ''; });
+      });
+      desenharSazonalidadePadrao(); desenharEstimativa(); desenharAbasFw();
+    });
+  }
+
   function desenharAbasFw(){
+    desenharSazonalidadePadrao();
     var abas = el('abas-fw');
     abas.innerHTML = '';
-    if (estado.frameworks.length === 0){
+    if (frameworksDaColeta().length === 0){
       el('painel-fw').innerHTML = '<div class="vazio">Nenhum framework marcado. Volte ao passo anterior para escolher.</div>';
       return;
     }
-    if (estado.frameworks.indexOf(fwAtiva) === -1 && fwAtiva !== 'custom') fwAtiva = estado.frameworks[0];
-    if (fwAtiva === 'custom' && !estado.temCustomizados) fwAtiva = estado.frameworks[0];
-    estado.frameworks.forEach(function(id){
+    if (frameworksDaColeta().indexOf(fwAtiva) === -1 && fwAtiva !== 'custom') fwAtiva = frameworksDaColeta()[0];
+    if (fwAtiva === 'custom' && !C().temCustomizados) fwAtiva = frameworksDaColeta()[0];
+    frameworksDaColeta().forEach(function(id){
       var n = contarFw(id);
       var b = document.createElement('button');
       b.className = (id === fwAtiva ? 'ativa' : '');
@@ -5350,7 +5575,7 @@ var FRAMEWORKS = {"gri":{"nome":"GRI","descricao":"Global Reporting Initiative �
       abas.appendChild(b);
     });
 
-    if (estado.temCustomizados){
+    if (C().temCustomizados){
       var prontos = C().customizados.filter(function(c){ return c.nome && c.arquivo; }).length;
       var bc = document.createElement('button');
       bc.className = (fwAtiva === 'custom' ? 'ativa' : '');
@@ -5383,6 +5608,18 @@ var FRAMEWORKS = {"gri":{"nome":"GRI","descricao":"Global Reporting Initiative �
       '<span class="contagem-fw"><b>' + contarFw(id) + '</b> de ' + fw.total + ' selecionados</span>';
     painel.appendChild(barra);
 
+    if (id === 'gri'){
+      var setorNome = (SETORES.filter(function(s){ return s.id === contrato.setor; })[0] || {}).nome;
+      var ocultos = fw.grupos.length - gruposVisiveis(id).length;
+      if (ocultos > 0){
+        var nota = document.createElement('div');
+        nota.className = 'nota-setor';
+        nota.innerHTML = 'Mostrando o GRI universal e o suplemento setorial de <b>' + esc(setorNome) + '</b>. ' +
+          ocultos + ' grupo(s) de outros setores estão ocultos.';
+        painel.appendChild(nota);
+      }
+    }
+
     barra.querySelector('.busca').addEventListener('input', function(e){
       busca[id] = e.target.value;
       desenharPainelFw();
@@ -5396,9 +5633,20 @@ var FRAMEWORKS = {"gri":{"nome":"GRI","descricao":"Global Reporting Initiative �
     barra.querySelector('[data-acao=recolher]').addEventListener('click', function(){ abrirTodosGrupos(id, false); });
 
     var achou = false;
-    fw.grupos.forEach(function(grupo, gi){
+    gruposVisiveis(id).forEach(function(par){
+      var grupo = par.g, gi = par.gi;
       var itens = [];
+      var jaTem33 = false;
       grupo.itens.forEach(function(item, ii){
+        // GRI 3-3 se repete uma vez por tema material: mostramos um único item
+        if (id === 'gri' && /^GRI 3-3/.test(item.cod || '')){
+          if (jaTem33) return;
+          jaTem33 = true;
+          var qtd = temasMateriais().length;
+          item = {cod: item.cod, desc: 'Gestão dos temas materiais — uma resposta por tema material' +
+            (qtd ? ' (' + qtd + ' tema(s) definidos nos parâmetros)' : ' (defina os temas nos Parâmetros)'),
+            umPorTema: true};
+        }
         var texto = (item.cod + ' ' + item.desc).toLowerCase();
         if (!termo || texto.indexOf(termo) !== -1) itens.push({item:item, ii:ii});
       });
@@ -5521,7 +5769,7 @@ var FRAMEWORKS = {"gri":{"nome":"GRI","descricao":"Global Reporting Initiative �
     painelDet.innerHTML =
       '<div class="grade">' +
         '<div class="campo"><label>Sazonalidade deste indicador</label><select data-d="saz">' +
-          opcoesSazonalidade(det.sazonalidade, 'Padrão do projeto (' + rotuloPeriodo(perAtual()) + ')') +
+          opcoesSazonalidade(det.sazonalidade, 'Padrão desta coleta (' + rotuloPeriodo(sazonalidadePadraoAtual()) + ')') +
         '</select>' + (sazonalidadesPermitidas().length === 1
           ? '<span class="dica">Projeto anual: não é possível coletar com mais frequência.</span>' : '') + '</div>' +
         '<div class="campo"><label>Respondentes</label>' +
@@ -5535,6 +5783,11 @@ var FRAMEWORKS = {"gri":{"nome":"GRI","descricao":"Global Reporting Initiative �
             '<select data-d="val">' + opcoesAdicionar('Validador', det.validadores) + '</select>' +
             '<button class="btn-mais" data-novo="Validador" title="Cadastrar novo validador">+</button></div></div>' +
       '</div>' +
+      (temasMateriais().length ? '<div class="bloco-coletas"><label class="rot-coletas">Tema material relacionado</label>' +
+        '<select data-d="tema" style="max-width:340px"><option value="">— não vinculado —</option>' +
+        temasMateriais().map(function(t){
+          return '<option value="' + esc(t) + '"' + (det.tema === t ? ' selected' : '') + '>' + esc(t) + '</option>';
+        }).join('') + '</select></div>' : '') +
       (estado.temHierarquia ? '<div class="bloco-coletas"><label class="rot-coletas">Em quais coletas este indicador aparece</label>' +
         '<div class="opcoes-coletas" data-area="coletas"></div></div>' : '') +
       '<div class="novo-pessoa" data-area="novo">' +
@@ -5566,6 +5819,8 @@ var FRAMEWORKS = {"gri":{"nome":"GRI","descricao":"Global Reporting Initiative �
       desenharEstimativa();
     }
     painelDet.querySelector('[data-d=saz]').addEventListener('change', function(e){ guardaDet('sazonalidade', e.target.value); redesenharLinha(); });
+    var selTema = painelDet.querySelector('[data-d=tema]');
+    if (selTema) selTema.addEventListener('change', function(e){ guardaDet('tema', e.target.value); redesenharLinha(); });
     painelDet.querySelector('[data-d=resp]').addEventListener('change', function(e){
       if (!e.target.value) return;
       adicionarPessoaAoIndicador(fwId, chave, 'respondentes', e.target.value);
@@ -5733,6 +5988,7 @@ var FRAMEWORKS = {"gri":{"nome":"GRI","descricao":"Global Reporting Initiative �
     d.validadores.forEach(function(pid){
       html += '<span class="chip-mini pessoa">' + avatar(pid) + esc(nomePessoa(pid)) + ' <i>valida</i></span>';
     });
+    if (d.tema) html += '<span class="chip-mini tema">' + esc(d.tema) + '</span>';
     if (estado.temHierarquia){
       if (d.coletas.length){
         d.coletas.forEach(function(id){
@@ -5995,7 +6251,7 @@ var FRAMEWORKS = {"gri":{"nome":"GRI","descricao":"Global Reporting Initiative �
   // quantos indicadores apontam para esta coleta (definido no passo de indicadores)
   function contarIndicadoresDaColeta(noId){
     var n = 0;
-    estado.frameworks.forEach(function(fwId){
+    frameworksDaColeta().forEach(function(fwId){
       var sel = C().selecionados[fwId] || {};
       Object.keys(sel).forEach(function(chave){
         if (detalheDe(fwId, chave).coletas.indexOf(noId) !== -1) n++;
@@ -6012,24 +6268,30 @@ var FRAMEWORKS = {"gri":{"nome":"GRI","descricao":"Global Reporting Initiative �
     if (!alvo) return;
     alvo.classList.toggle('oculto', !el('ver-arvore').checked);
     if (!el('ver-arvore').checked) return;
-    var niveis = [[], [], [], []];
-    C().hierarquia.forEach(function(no){ niveis[no.nivel - 1].push(no); });
-    var rotulos = ['COLETA MÃE', 'COLETAS FILHAS', 'COLETAS NETAS', 'COLETAS BISNETAS'];
-    var html = '';
-    niveis.forEach(function(lista, i){
-      if (!lista.length) return;
-      html += '<div class="rotulo-nivel">' + rotulos[i] + '</div><div class="nivel-arvore">';
-      lista.forEach(function(no){
-        html += '<div class="no-arvore n' + no.nivel + '">' +
-                (no.nivel > 1 ? '<span class="traco-cima"></span>' : '') +
-                '<span class="rot">' + (no.pai ? 'sob ' + esc((noPorId(no.pai) || {}).nome || '') : 'raiz') + '</span>' +
-                '<span class="nom">' + esc(no.nome) + '</span>' +
-                '<span class="qtd">' + contarIndicadoresDaColeta(no.id) + ' indicador(es)</span>' +
-                '</div>';
-      });
-      html += '</div>';
-    });
-    alvo.innerHTML = html || '<div class="vazio">Monte a estrutura abaixo para ver a árvore.</div>';
+
+    var raizes = C().hierarquia.filter(function(n){ return n.pai === null; });
+    if (!raizes.length){
+      alvo.innerHTML = '<div class="vazio">Monte a estrutura abaixo para ver a hierarquia.</div>';
+      return;
+    }
+
+    var ROT = ['COLETA MÃE','COLETA FILHA','COLETA NETA','COLETA BISNETA'];
+
+    function ramo(no){
+      var filhos = filhosDe(no.id);
+      var qtd = contarIndicadoresDaColeta(no.id);
+      return '<li>' +
+        '<div class="no-org n' + no.nivel + '">' +
+          '<span class="rot-org-no">' + ROT[no.nivel - 1] + '</span>' +
+          '<span class="nome-org">' + esc(no.nome) + '</span>' +
+          '<span class="qtd-org">' + qtd + ' indicador(es)</span>' +
+        '</div>' +
+        (filhos.length ? '<ul>' + filhos.map(ramo).join('') + '</ul>' : '') +
+      '</li>';
+    }
+
+    alvo.innerHTML = '<div class="rolagem-org"><ul class="arvore-org">' +
+      raizes.map(ramo).join('') + '</ul></div>';
   }
 
   function desenharArvore(){
@@ -6045,9 +6307,9 @@ var FRAMEWORKS = {"gri":{"nome":"GRI","descricao":"Global Reporting Initiative �
     if (niveis[4]) partes.push(niveis[4] + ' bisneta(s)');
     aviso.innerHTML = '<div class="aviso neutro"><b>Coleta ' + (estado.coletaAtiva + 1) + ' de ' +
       contrato.qtdColetas + ' contratada(s).</b> ' +
-      (partes.length ? 'Esta coleta tem ' + partes.join(', ') + ' — desdobramentos internos são livres e não consomem coletas do contrato. '
-                     : 'Filhas, netas e bisnetas são desdobramentos internos e não consomem coletas do contrato. ') +
-      'A distribuição dos indicadores é feita no passo seguinte, na configuração de cada indicador.</div>';
+      (partes.length ? 'Esta coleta tem ' + partes.join(', ') + '. ' : '') +
+      'Os níveis da hierarquia são desdobramentos internos e não representam novas coletas contratadas. ' +
+      'A distribuição dos indicadores será definida no próximo passo.</div>';
 
     function desenharNo(no){
       var div = document.createElement('div');
@@ -6084,18 +6346,19 @@ var FRAMEWORKS = {"gri":{"nome":"GRI","descricao":"Global Reporting Initiative �
   /* ---------- parâmetros de coleta ---------- */
   function desenharParametros(){
     var alvo = el('lista-parametros');
-    var preenchidos = PARAMETROS.filter(function(pm){ return valoresParam(pm.id).length; }).length;
-    var faltando = PARAMETROS.filter(function(pm){ return pm.obrigatorio && !valoresParam(pm.id).length; });
+    var aplicaveis = parametrosAplicaveis();
+    var preenchidos = aplicaveis.filter(function(pm){ return valoresParam(pm.id).length; }).length;
+    var faltando = aplicaveis.filter(function(pm){ return pm.obrigatorio && !valoresParam(pm.id).length; });
 
     el('resumo-parametros').innerHTML =
-      '<span>Parâmetros preenchidos <b>' + preenchidos + ' de ' + PARAMETROS.length + '</b></span>' +
+      '<span>Parâmetros preenchidos <b>' + preenchidos + ' de ' + aplicaveis.length + '</b></span>' +
       '<span>' + (faltando.length
         ? '<b style="color:var(--vermelho-texto)">' + faltando.length + ' obrigatório(s) em branco</b>'
         : '<b style="color:var(--verde)">todos os obrigatórios preenchidos</b>') + '</span>' +
       '<span>Estas listas definem as linhas das tabelas nos formulários dos indicadores.</span>';
 
     alvo.innerHTML = '';
-    PARAMETROS.forEach(function(pm){
+    aplicaveis.forEach(function(pm){
       var vals = valoresParam(pm.id);
       var div = document.createElement('div');
       div.className = 'bloco-param' + (pm.obrigatorio && !vals.length ? ' faltando' : '');
@@ -6195,7 +6458,7 @@ var FRAMEWORKS = {"gri":{"nome":"GRI","descricao":"Global Reporting Initiative �
   }
 
   function parametrosPendentes(){
-    return PARAMETROS.filter(function(pm){
+    return parametrosAplicaveis().filter(function(pm){
       return pm.obrigatorio && !valoresParam(pm.id).filter(function(v){ return v.trim(); }).length;
     }).map(function(pm){ return pm.nome.toLowerCase(); });
   }
@@ -6588,7 +6851,7 @@ var FRAMEWORKS = {"gri":{"nome":"GRI","descricao":"Global Reporting Initiative �
     html += '<h2 class="subtitulo">Parâmetros de coleta</h2>';
     html += '<table class="resumo"><thead><tr><th>Parâmetro</th><th style="width:90px">Valores</th>' +
             '<th>Conteúdo</th></tr></thead><tbody>';
-    PARAMETROS.forEach(function(pm){
+    parametrosAplicaveis().forEach(function(pm){
       var vals = valoresParam(pm.id).filter(function(v){ return v.trim(); });
       html += '<tr><td><b>' + pm.nome + '</b></td><td>' + vals.length + '</td>' +
         '<td>' + (vals.length ? vals.map(function(v){ return '<span class="pill">' + esc(v) + '</span>'; }).join('')
@@ -6662,7 +6925,7 @@ var FRAMEWORKS = {"gri":{"nome":"GRI","descricao":"Global Reporting Initiative �
 
   function contarSemColeta(){
     var n = 0;
-    estado.frameworks.forEach(function(fwId){
+    frameworksDaColeta().forEach(function(fwId){
       var sel = C().selecionados[fwId] || {};
       Object.keys(sel).forEach(function(chave){
         if (!detalheDe(fwId, chave).coletas.length) n++;
@@ -6674,7 +6937,7 @@ var FRAMEWORKS = {"gri":{"nome":"GRI","descricao":"Global Reporting Initiative �
 
   function contarSemResponsavel(){
     var n = 0;
-    estado.frameworks.forEach(function(fwId){
+    frameworksDaColeta().forEach(function(fwId){
       var sel = C().selecionados[fwId] || {};
       Object.keys(sel).forEach(function(chave){
         var d = (C().detalhes[fwId] || {})[chave];
@@ -6686,7 +6949,7 @@ var FRAMEWORKS = {"gri":{"nome":"GRI","descricao":"Global Reporting Initiative �
   }
   function contarDaPessoa(pid){
     var n = 0;
-    estado.frameworks.forEach(function(fwId){
+    frameworksDaColeta().forEach(function(fwId){
       var sel = C().selecionados[fwId] || {};
       Object.keys(sel).forEach(function(chave){
         var d = (C().detalhes[fwId] || {})[chave];
@@ -6698,7 +6961,7 @@ var FRAMEWORKS = {"gri":{"nome":"GRI","descricao":"Global Reporting Initiative �
   }
   function contarPorSazonalidade(){
     var mapa = {};
-    estado.frameworks.forEach(function(fwId){
+    frameworksDaColeta().forEach(function(fwId){
       var sel = C().selecionados[fwId] || {};
       Object.keys(sel).forEach(function(chave){
         var s = sazonalidadeDe(fwId, chave) || 'indefinido';
@@ -6748,7 +7011,7 @@ var FRAMEWORKS = {"gri":{"nome":"GRI","descricao":"Global Reporting Initiative �
       empresa: estado.empresa,
       pontosFocais: estado.focais.map(function(f){ return {nome:f.nome, email:f.email, principal: !!f.principal}; }),
       anos: estado.anos, idiomas: estado.idiomas,
-      parametros: PARAMETROS.map(function(pm){
+      parametros: parametrosAplicaveis().map(function(pm){
         return {parametro: pm.nome, valores: valoresParam(pm.id).filter(function(v){ return v.trim(); })};
       }),
       coletas: estado.coletas.map(function(col){ return {nome:col.nome, periodicidade:col.periodicidade}; }),
@@ -6870,6 +7133,7 @@ var FRAMEWORKS = {"gri":{"nome":"GRI","descricao":"Global Reporting Initiative �
   el('voltar-coletas').addEventListener('click', function(){ trocarTelaFocal('lista'); });
   el('busca-coletas').addEventListener('input', desenharListaColetas);
   el('busca-ind').addEventListener('input', desenharArvoreInd);
+  el('ver-arvore').addEventListener('change', desenharArvoreVisual);
   el('ind-proximo').addEventListener('click', function(){ moverIndicador(1); });
   el('ind-anterior').addEventListener('click', function(){ moverIndicador(-1); });
   document.querySelectorAll('.item-emp').forEach(function(b){
@@ -6888,6 +7152,7 @@ var FRAMEWORKS = {"gri":{"nome":"GRI","descricao":"Global Reporting Initiative �
     el(id).addEventListener('change', atualizarVigencia);
   });
   el('c-qtd-coletas').addEventListener('input', desenharColetasContratadas);
+  el('c-setor').addEventListener('change', function(e){ contrato.setor = e.target.value; });
   el('c-custom-opcao').addEventListener('click', function(){
     contrato.temCustomizados = !contrato.temCustomizados;
     desenharCustomAdmin();
@@ -7197,7 +7462,7 @@ var FRAMEWORKS = {"gri":{"nome":"GRI","descricao":"Global Reporting Initiative �
     var ordenadas = listaNotas.slice().sort(function(a, b){ return a.num - b.num; });
     var marcas = tracos.filter(function(t){ return t.tipo === 'retangulo'; })
                        .map(function(t){ return t.num; }).sort(function(a,b){ return a-b; });
-    var linhas = ['# Comentários sobre a tela — Seleção de indicadores', '',
+    var linhas = ['# Comentários sobre a tela — Configuração do projeto', '',
                   'Data: ' + new Date().toLocaleString('pt-BR'), '',
                   '| Nº | Comentário | Revisor | Campo marcado na tela |', '| --- | --- | --- | --- |'];
     ordenadas.forEach(function(n){
