@@ -305,6 +305,17 @@
   .btn-cobrar{margin-left:auto;background:var(--chip);border:none;border-radius:12px;padding:5px 12px;
     font-size:10px;font-weight:700;color:var(--azul);cursor:pointer;font-family:inherit;letter-spacing:0}
   .btn-cobrar:hover{background:#DCE6F7}
+  .tabela-torre th:first-child,.tabela-torre td:first-child{min-width:240px}
+  .tabela-torre th.num,.tabela-torre td.num{white-space:nowrap}
+  .tabela-torre th:first-child,.tabela-torre td:first-child{max-width:300px;white-space:normal}
+  .tabela-torre .frac{display:block}
+  .tabela-torre .mini-barra{display:block;width:100%;min-width:56px;margin:5px 0 0}
+  .tabela-torre td,.tabela-torre th{padding-left:10px;padding-right:10px}
+  .btn-cobrar-linha{background:var(--chip);border:none;border-radius:12px;padding:5px 11px;font-family:inherit;
+    font-size:11px;font-weight:700;color:var(--azul-escuro);cursor:pointer;white-space:nowrap}
+  .btn-cobrar-linha:hover{background:#DCE6F7}
+  .btn-massa[disabled]{opacity:.45;cursor:default}
+  .em-dia{font-size:11px;color:var(--verde);font-weight:600}
 
   .tab-painel{width:100%;border-collapse:collapse;font-size:12px}
   .tab-painel th{text-align:left;font-size:9px;font-weight:700;letter-spacing:.4px;color:var(--cinza);
@@ -662,7 +673,7 @@
   .cab-unid{display:flex;align-items:center;gap:12px;padding:10px 16px;border-bottom:1px solid var(--linha-suave);
     font-size:12px;font-weight:600;color:var(--cinza)}
   .cab-unid .acoes-u{margin-left:auto;display:flex;gap:10px;color:var(--cinza-claro)}
-  .lista-unid{max-height:330px;overflow-y:auto;padding:6px 0}
+  .lista-unid{max-height:42vh;overflow-y:auto;padding:6px 0}
   .linha-unid{display:flex;align-items:center;gap:10px;padding:9px 16px;font-size:13px}
   .linha-unid:hover{background:#FAFCFE}
   .linha-unid.filho{padding-left:44px}
@@ -4156,12 +4167,12 @@ var FRAMEWORKS = {"gri":{"nome":"GRI","descricao":"Global Reporting Initiative �
   }
 
   var ESTADOS_COLETA = [
-    {id:'sem',      nome:'Sem resposta',     cor:'#9AA5B5'},
-    {id:'preench',  nome:'Em preenchimento', cor:'#F5B301'},
-    {id:'analise',  nome:'Em análise',       cor:'#2FB6E8'},
-    {id:'aprovado', nome:'Aprovado',         cor:'#188038'},
-    {id:'reprovado',nome:'Reprovado',        cor:'#EF5A6F'},
-    {id:'auditado', nome:'Auditado',         cor:'#5B3FA8'}
+    {id:'sem',      nome:'Sem resposta',     curto:'Sem resp.', cor:'#9AA5B5'},
+    {id:'preench',  nome:'Em preenchimento', curto:'Preench.',  cor:'#F5B301'},
+    {id:'analise',  nome:'Em análise',       curto:'Análise',   cor:'#2FB6E8'},
+    {id:'aprovado', nome:'Aprovado',         curto:'Aprov.',    cor:'#188038'},
+    {id:'reprovado',nome:'Reprovado',        curto:'Reprov.',   cor:'#EF5A6F'},
+    {id:'auditado', nome:'Auditado',         curto:'Audit.',    cor:'#5B3FA8'}
   ];
   function corEstado(id){
     var e = ESTADOS_COLETA.filter(function(x){ return x.id === id; })[0];
@@ -5314,9 +5325,16 @@ var FRAMEWORKS = {"gri":{"nome":"GRI","descricao":"Global Reporting Initiative �
     });
     var bt = raiz.querySelector('#btn-per-painel');
     if (bt) bt.addEventListener('click', function(e){
-      e.stopPropagation(); popPerAberto = !popPerAberto;
-      raiz.querySelector('#pop-per-painel').classList.toggle('aberto', popPerAberto);
+      e.stopPropagation();
+      var ab = !popPerAberto;
+      if (typeof fecharPops === 'function') fecharPops();
+      popPerAberto = ab;
+      var pop = raiz.querySelector('#pop-per-painel');
+      pop.classList.toggle('aberto', popPerAberto);
+      if (typeof posicionarPop === 'function') posicionarPop(bt, pop);
     });
+    var popR = raiz.querySelector('#pop-per-painel');
+    if (popR) popR.addEventListener('click', function(e){ e.stopPropagation(); });
     raiz.querySelectorAll('[data-pv]').forEach(function(b){
       b.addEventListener('click', function(){
         var p = b.dataset.pv.split('|');
@@ -5813,11 +5831,12 @@ var FRAMEWORKS = {"gri":{"nome":"GRI","descricao":"Global Reporting Initiative �
         }).join('') + '</div>' +
 
         '<div class="abas-torre">' +
-          [['indicadores','Indicadores'],['unidades','Unidades'],['usuarios','Usuários'],['grupos','Grupos']]
+          [['indicadores','Indicadores'],['unidades','Unidades'],['usuarios','Usuários']]
             .map(function(a){
               return '<button class="' + (abaTorre === a[0] ? 'on' : '') + '" data-at="' + a[0] + '">' + a[1] + '</button>';
             }).join('') +
-          '<button class="btn-massa" id="aprovar-massa">&#10003; Aprovar em massa</button>' +
+          '<button class="btn-massa" id="cobrar-todos"' + (c.sem ? '' : ' disabled') + '>' +
+            '&#9993; Cobrar ' + c.sem + ' pendente' + (c.sem === 1 ? '' : 's') + '</button>' +
         '</div>' +
         '<div id="tabela-torre"></div>' +
       '</div>';
@@ -5828,13 +5847,36 @@ var FRAMEWORKS = {"gri":{"nome":"GRI","descricao":"Global Reporting Initiative �
     alvo.querySelectorAll('[data-at]').forEach(function(b){
       b.addEventListener('click', function(){ abaTorre = b.dataset.at; desenharTorre(); });
     });
-    el('aprovar-massa').addEventListener('click', function(){
-      var alvos = regs.filter(function(r){ return r.status === 'analise' || r.status === 'preench'; });
-      if (!alvos.length){ alert('Nenhum registro em preenchimento ou em análise para aprovar.'); return; }
-      if (!confirm('Aprovar ' + alvos.length + ' registro(s)? Os dados aprovados ficam travados para os respondentes.')) return;
-      alvos.forEach(function(r){ definirStatus(r.ind.cod + r.ind.nome, r.unidade.id, r.periodo, 'aprovado'); });
+    el('cobrar-todos').addEventListener('click', function(){
+      var pend = regs.filter(function(r){ return r.status === 'sem'; });
+      if (!pend.length) return;
+      var pessoas = {};
+      pend.forEach(function(r){ pessoas[responsavelDe(r.unidade.id).nome] = true; });
+      var quantas = Object.keys(pessoas).length;
+      if (!confirm('Enviar cobrança de ' + pend.length + ' lançamento(s) pendente(s) para ' +
+                   quantas + ' responsável(is)?')) return;
+      registrarCobranca(pend);
       desenharTorre();
     });
+  }
+
+  // a torre cobra: registra o envio e mostra desde quando cada linha está sendo cobrada
+  var cobrancas = {};
+  function chaveCob(r){ return r.ind.cod + r.ind.nome + '|' + r.unidade.id + '|' + r.periodo; }
+  function registrarCobranca(regs){
+    var hoje = new Date();
+    regs.forEach(function(r){
+      var k = chaveCob(r);
+      cobrancas[k] = {n:(cobrancas[k] ? cobrancas[k].n : 0) + 1, em:hoje};
+    });
+  }
+  function cobrancasDe(regs){
+    var n = 0, ult = null;
+    regs.forEach(function(r){
+      var c = cobrancas[chaveCob(r)];
+      if (c){ n += c.n; if (!ult || c.em > ult) ult = c.em; }
+    });
+    return {n:n, ult:ult};
   }
 
   function cardTorre(rot, val, cor, pct){
@@ -5853,9 +5895,10 @@ var FRAMEWORKS = {"gri":{"nome":"GRI","descricao":"Global Reporting Initiative �
       if (abaTorre === 'indicadores'){ chave = r.ind.cod + r.ind.nome; rotulo = (r.ind.semCod ? '' : r.ind.cod + ' — ') + r.ind.nome; }
       if (abaTorre === 'unidades'){ chave = r.unidade.id; rotulo = r.unidade.nome + ' (' + r.unidade.poloNome.replace(' (GHG)','') + ')'; }
       if (abaTorre === 'usuarios'){ var p = responsavelDe(r.unidade.id); chave = p.nome; rotulo = p.nome; }
-      if (abaTorre === 'grupos'){ var g = responsavelDe(r.unidade.id).grupo; chave = g; rotulo = g; }
-      if (!grupos[chave]) grupos[chave] = {rotulo:rotulo, total:0, estados:{sem:0,preench:0,analise:0,aprovado:0,reprovado:0,auditado:0}};
+      if (!grupos[chave]) grupos[chave] = {rotulo:rotulo, chave:chave, total:0, regs:[],
+                                           estados:{sem:0,preench:0,analise:0,aprovado:0,reprovado:0,auditado:0}};
       grupos[chave].total++;
+      grupos[chave].regs.push(r);
       grupos[chave].estados[r.status]++;
     });
 
@@ -5864,23 +5907,43 @@ var FRAMEWORKS = {"gri":{"nome":"GRI","descricao":"Global Reporting Initiative �
 
     alvo.innerHTML =
       '<div class="rolagem-num"><table class="tabela-limpa tabela-torre"><thead><tr>' +
-        '<th>' + (abaTorre === 'indicadores' ? 'Indicador' : abaTorre === 'unidades' ? 'Unidade'
-                 : abaTorre === 'usuarios' ? 'Usuário' : 'Grupo') + '</th>' +
+        '<th>' + (abaTorre === 'indicadores' ? 'Indicador'
+                 : abaTorre === 'unidades' ? 'Unidade' : 'Usuário') + '</th>' +
         '<th class="num">Respondido</th><th class="num">Total</th>' +
-        ESTADOS_COLETA.map(function(e){ return '<th class="num">' + e.nome + '</th>'; }).join('') +
+        ESTADOS_COLETA.map(function(e){
+          return '<th class="num" title="' + e.nome + '">' + e.curto + '</th>';
+        }).join('') +
+        '<th class="num" title="Cobranças enviadas">Cobr.</th><th></th>' +
       '</tr></thead><tbody>' +
-      (linhas.length ? linhas.map(function(l){
+      (linhas.length ? linhas.map(function(l, li){
         var resp = l.total - l.estados.sem;
+        var cob = cobrancasDe(l.regs);
         return '<tr><td>' + esc(l.rotulo) + '</td>' +
           '<td class="num"><span class="frac">' + resp + '/' + l.total + '</span>' +
             '<span class="mini-barra"><i style="width:' + Math.round(resp / l.total * 100) + '%"></i></span></td>' +
           '<td class="num">' + l.total + '</td>' +
           ESTADOS_COLETA.map(function(e){
             return '<td class="num' + (l.estados[e.id] ? '' : ' zero-t') + '">' + l.estados[e.id] + '</td>';
-          }).join('') + '</tr>';
-      }).join('') : '<tr><td colspan="9" class="vazio">Nenhum registro com os filtros atuais.</td></tr>') +
+          }).join('') +
+          '<td class="num' + (cob.n ? '' : ' zero-t') + '"' + (cob.ult ? ' title="última em ' +
+            cob.ult.toLocaleDateString('pt-BR') + '"' : '') + '>' + cob.n + '</td>' +
+          '<td class="num">' + (l.estados.sem
+            ? '<button class="btn-cobrar-linha" data-cob="' + li + '">&#9993; Cobrar ' + l.estados.sem + '</button>'
+            : '<span class="em-dia">em dia</span>') + '</td></tr>';
+      }).join('') : '<tr><td colspan="11" class="vazio">Nenhum registro com os filtros atuais.</td></tr>') +
       '</tbody></table></div>' +
-      '<p class="dica-tab">Mostrando ' + linhas.length + ' linha(s). Os filtros de período e unidades no topo valem para esta visão.</p>';
+      '<p class="dica-tab">Mostrando ' + linhas.length + ' linha(s). Os filtros de período e unidades no topo valem para esta visão. ' +
+      'A cobrança usa o modelo de e-mail configurado em Notificações.</p>';
+
+    alvo.querySelectorAll('[data-cob]').forEach(function(b){
+      b.addEventListener('click', function(){
+        var l = linhas[Number(b.dataset.cob)];
+        var pend = l.regs.filter(function(r){ return r.status === 'sem'; });
+        if (!confirm('Enviar cobrança de ' + pend.length + ' lançamento(s) de "' + l.rotulo + '"?')) return;
+        registrarCobranca(pend);
+        desenharTorre();
+      });
+    });
   }
 
   /* ---------- importação em massa ---------- */
@@ -10074,12 +10137,36 @@ var FRAMEWORKS = {"gri":{"nome":"GRI","descricao":"Global Reporting Initiative �
   el('busca-coletas').addEventListener('input', desenharListaColetas);
   el('busca-ind').addEventListener('input', desenharArvoreInd);
 
+  // o painel da coleta corta o que passa das bordas: os popovers são posicionados em tela
+  function posicionarPop(botao, pop){
+    if (!pop.classList.contains('aberto')){ pop.style.cssText = ''; return; }
+    var r = botao.getBoundingClientRect();
+    pop.style.position = 'fixed';
+    pop.style.right = 'auto';
+    pop.style.top = (r.bottom + 8) + 'px';
+    var larg = pop.offsetWidth || 620;
+    var esq = Math.min(r.right - larg, window.innerWidth - larg - 14);
+    pop.style.left = Math.max(14, esq) + 'px';
+    pop.style.maxHeight = Math.max(260, window.innerHeight - r.bottom - 26) + 'px';
+    pop.style.overflowY = 'auto';
+  }
+  function fecharPops(){
+    ['pop-periodos','pop-unidades','pop-per-painel'].forEach(function(id){
+      var p = el(id);
+      if (p){ p.classList.remove('aberto'); p.style.cssText = ''; }
+    });
+    popPerAberto = false;
+    var mf = el('menu-fav'); if (mf) mf.classList.remove('aberto');
+  }
+
   el('btn-periodos').addEventListener('click', function(e){
     e.stopPropagation();
     rascunhoPeriodos = inventario.periodos.slice();
     desenharPopPeriodos();
-    el('pop-periodos').classList.toggle('aberto');
-    el('pop-unidades').classList.remove('aberto');
+    var aberto = !el('pop-periodos').classList.contains('aberto');
+    fecharPops();
+    el('pop-periodos').classList.toggle('aberto', aberto);
+    posicionarPop(el('btn-periodos'), el('pop-periodos'));
   });
   el('pop-periodos').addEventListener('click', function(e){ e.stopPropagation(); });
 
@@ -10088,16 +10175,15 @@ var FRAMEWORKS = {"gri":{"nome":"GRI","descricao":"Global Reporting Initiative �
     rascunhoUnidades = inventario.unidades.length ? inventario.unidades.slice()
                                                  : todasUnidades().map(function(u){ return u.id; });
     desenharPopUnidades();
-    el('pop-unidades').classList.toggle('aberto');
-    el('pop-periodos').classList.remove('aberto');
+    var ab = !el('pop-unidades').classList.contains('aberto');
+    fecharPops();
+    el('pop-unidades').classList.toggle('aberto', ab);
+    posicionarPop(el('btn-unidades'), el('pop-unidades'));
   });
   el('pop-unidades').addEventListener('click', function(e){ e.stopPropagation(); });
 
-  document.addEventListener('click', function(){
-    el('pop-periodos').classList.remove('aberto');
-    el('pop-unidades').classList.remove('aberto');
-    var mf = el('menu-fav'); if (mf) mf.classList.remove('aberto');
-  });
+  document.addEventListener('click', fecharPops);
+  window.addEventListener('resize', fecharPops);
 
   document.querySelectorAll('#abas-coleta button').forEach(function(b){
     b.addEventListener('click', function(){ trocarAbaColeta(b.dataset.ac); });
